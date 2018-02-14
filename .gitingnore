@@ -1,4 +1,5 @@
 *.class
 InterfaceGraphique/out/
+serialInterfaceAlien/out/
 *.iml
 *.idea
