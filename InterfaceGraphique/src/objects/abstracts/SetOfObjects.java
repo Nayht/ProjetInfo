@@ -160,7 +160,7 @@ public class SetOfObjects {
             if (this.x == this.startX) {
                 this.vx = 0.5 * (this.aimX - this.x) / Math.abs(this.aimX - this.x);
             } else {
-                this.vx = (this.x - this.startX) * (this.x - this.aimX) / 10000; // /613 to bouncy bouncy
+                this.vx = (this.x - this.startX) * (this.x - this.aimX) / 2000; // /613 to bouncy bouncy
                 if (this.longMovementDirection == Directions.RIGHT) {
                     this.vx *= -1;
                 }
@@ -172,7 +172,7 @@ public class SetOfObjects {
             if (this.y == this.startY) {
                 this.vy = 0.5 * (this.aimY - this.y) / Math.abs(this.aimY - this.y);
             } else {
-                this.vy = (this.y - this.startY) * (this.y - this.aimY) / 10000; // /613 to bouncy bouncy
+                this.vy = (this.y - this.startY) * (this.y - this.aimY) / 2000; // /613 to bouncy bouncy
                 if (this.longMovementDirection == Directions.DOWN) {
                     this.vy *= -1;
                 }
