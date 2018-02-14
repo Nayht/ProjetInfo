@@ -1,0 +1,4 @@
+*.class
+InterfaceGraphique/out/
+*.iml
+*.idea
