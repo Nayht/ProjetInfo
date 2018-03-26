@@ -1,5 +1,7 @@
 #include <Arduino.h>
 #include <Wire.h>
+#include "MIDI/MIDI.h"
+
 #include "SparkFun_APDS9960.h"
 
 // Pins
@@ -7,19 +9,24 @@
 
 void interruptRoutine();
 void handleGesture();
+void cancerMIDI();
+
 // Constants
 
 // Global Variables
 SparkFun_APDS9960 apds = SparkFun_APDS9960();
 int isr_flag = 0;
 
+MIDI_CREATE_DEFAULT_INSTANCE();
+
 void setup() {
 
+  MIDI.begin();
   // Set interrupt pin as input
   pinMode(APDS9960_INT, INPUT);
 
   // Initialize Serial port
-  Serial.begin(9600);
+  Serial.begin(115200);
   /*Serial.println();
   Serial.println(F("--------------------------------"));
   Serial.println(F("SparkFun APDS-9960 - GestureTest"));
@@ -84,5 +91,37 @@ void handleGesture() {
       default:
         Serial.println("NONE");
     }
+  }
+    
+  void cancerMIDI()
+  {
+      long note = random(10,66);
+      MIDI.sendProgramChange(random(0,200),1);
+      MIDI.sendNoteOn(note,200,1);
+      delay(500);
+      for(float f = 0.2f;f<=0.6;f+=0.1f)
+      {
+          MIDI.sendPitchBend(f,1);
+          delay(100);
+      }
+      delay(500);
+      MIDI.sendControlChange(64,127,1);
+      for(int i = 15;i<=80;i+=5)
+      {
+          MIDI.sendControlChange(91,i,1);
+
+      }
+      delay(2000);
+      MIDI.sendControlChange(64,0,1);
+      delay(500);
+      for(float f = 0.6f;f>=-0.6;f-=0.2f)
+      {
+          MIDI.sendPitchBend(f,1);
+          delay(100);
+      }
+      MIDI.sendControlChange(91,0,1);
+      MIDI.sendNoteOff(note,200,1);
+      MIDI.sendPitchBend(0,1);
+      delay(1000);
   }
 }
