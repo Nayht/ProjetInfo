@@ -1,7 +1,7 @@
 <component name="libraryTable">
   <library name="RXTXcomm">
     <CLASSES>
-      <root url="jar://$USER_HOME$/jdk-9.0.4/lib/RXTXcomm.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../arduinoMoveSensor/lib/RXTXcomm.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />
