@@ -9,6 +9,7 @@
 // Global Variables
 SparkFun_APDS9960 apds = SparkFun_APDS9960();
 int isr_flag = 0;
+uint8_t proximity_data = 0;
 
 void setup() {
 
@@ -33,6 +34,18 @@ void setup() {
     Serial.println(F("Gesture sensor is now running"));
   } else {
     Serial.println(F("Something went wrong during gesture sensor init!"));
+  }
+   
+   // Adjust the Proximity sensor gain
+  if ( !apds.setProximityGain(PGAIN_1X) ) {
+    Serial.println(F("Something went wrong trying to set PGAIN"));
+  }
+  
+  // Start running the APDS-9960 proximity sensor (no interrupts)
+  if ( apds.enableProximitySensor(false) ) {
+    Serial.println(F("Proximity sensor is now running"));
+  } else {
+    Serial.println(F("Something went wrong during sensor init!"));
   }
 }
 
@@ -62,11 +75,16 @@ void handleGesture() {
       case DIR_NEAR:
         Serial.println("NEAR");
         break;
-      case DIR_FAR:
-        Serial.println("FAR");
-        break;
       default:
-        Serial.println("NONE");
+         if ( !apds.readProximity(proximity_data) ) {
+            Serial.println("Error reading proximity value");
+          } 
+          else {
+            Serial.print("Proximity: ");
+            Serial.println(proximity_data);
+          }
+          // Wait 250 ms before next reading (originalement)
+          delay(10);
     }
   }
 }
