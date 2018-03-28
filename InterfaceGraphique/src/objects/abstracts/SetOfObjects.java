@@ -39,7 +39,7 @@ public class SetOfObjects {
         this.startY = 0;
         this.vx = 0;
         this.vy = 0;
-        this.maxSpeed=100;
+        this.maxSpeed=50;
         this.inLongMovement = false;
         this.toSlideLeft=false;
         this.toSlideRight=false;
@@ -182,15 +182,15 @@ public class SetOfObjects {
         }
 
         //On majore la vitesse en valeur absolue
-        if (this.vx > maxSpeed) {
-            this.vx = maxSpeed;
-        } else if (this.vx < -maxSpeed) {
-            this.vx = -maxSpeed;
+        if (this.vx > this.maxSpeed) {
+            this.vx = this.maxSpeed;
+        } else if (this.vx < -this.maxSpeed) {
+            this.vx = -this.maxSpeed;
         }
-        if (this.vy > maxSpeed) {
-            this.vy = maxSpeed;
-        } else if (this.vy < -maxSpeed) {
-            this.vy = -maxSpeed;
+        if (this.vy > this.maxSpeed) {
+            this.vy = this.maxSpeed;
+        } else if (this.vy < -this.maxSpeed) {
+            this.vy = -this.maxSpeed;
         }
 
         //On recale correctement lorsque le slide est presque fini

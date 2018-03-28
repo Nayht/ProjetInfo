@@ -12,7 +12,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
-import objects.Clock;
+import objects.Time.Calendar;
+import objects.Time.Clock;
+import objects.Time.Date;
 import objects.abstracts.SetOfObjects;
 
 import java.util.List;
@@ -52,7 +54,7 @@ public class Main extends Application {
         GraphicsContext gc = canvas.getGraphicsContext2D();
         //On définit la police de base du GC
         gc.setFont(Font.font("Arial", FontWeight.SEMI_BOLD, 48));
-        gc.setFill(Color.RED);
+        gc.setFill(Color.WHITE);
         gc.setStroke(Color.WHITE);
         gc.setLineWidth(3);
 
@@ -65,6 +67,8 @@ public class Main extends Application {
         //PAGE 1
         setOfObjects.appendCadre(30,30,width-60, height-60, 50,50); //on ajoute un cadre au premier panel
         setOfObjects.appendObject(new Clock(60,80, gc, "Helvetica",FontWeight.SEMI_BOLD,28)); //on ajoute une horloge au premier panel
+        setOfObjects.appendObject(new Date(width-240,80, gc, "Helvetica",FontWeight.SEMI_BOLD,28)); //on ajoute une horloge au premier panel
+        setOfObjects.appendObject(new Calendar(60,100, gc,2)); //on ajoute une horloge au premier panel
 
         //PAGE 2
         setOfObjects.addPanel(); //on ajoute un panel
