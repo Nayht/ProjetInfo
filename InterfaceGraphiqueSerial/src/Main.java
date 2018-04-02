@@ -139,6 +139,12 @@ public class Main extends Application {
             public void handle(long now) {
                 String message = serial.readMessage();
 
+                if(message != null) {
+                    if (message.equals("LEFT")) {
+                        setOfObjects.setToSlideLeft(true);
+                    }
+                }
+
                 gc.drawImage(fond, 0, 0); //on affiche le fond
                 setOfObjects.updateAndDisplay(); //on update tous les objets
 

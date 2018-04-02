@@ -12,10 +12,6 @@ void setup() {
 }
 
 void loop() {
-    digitalWrite(13,HIGH);
-    Serial.println("test");
-    delay(1000);
-    digitalWrite(13,LOW);
-    Serial.println("test");
+    Serial.println("LEFT");
     delay(1000);
 }
