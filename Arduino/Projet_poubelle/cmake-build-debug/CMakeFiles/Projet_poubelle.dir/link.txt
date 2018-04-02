@@ -1,0 +1,1 @@
+/home/elektron/.platformio/packages/toolchain-gccarmnoneeabi/bin/arm-none-eabi-g++  -g  -rdynamic CMakeFiles/Projet_poubelle.dir/src/main.cpp.o  -o Projet_poubelle 
