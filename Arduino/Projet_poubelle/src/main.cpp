@@ -12,6 +12,6 @@ void setup() {
 }
 
 void loop() {
-    Serial.println("LEFT");
+    Serial.println("RIGHT");
     delay(1000);
 }

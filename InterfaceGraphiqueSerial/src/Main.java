@@ -13,6 +13,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import objects.EventMgr;
 import objects.time.Calendar;
 import objects.time.Clock;
 import objects.time.Date;
@@ -99,6 +100,9 @@ public class Main extends Application {
         setOfObjects.addPanel();
         setOfObjects.appendCadre(30+5*width,30,width-60, height-60, 50,50);
 
+        /** On créé un eventMgr qui récupèrera les ordres envoyés par série
+         */
+        EventMgr eventMgr = new EventMgr(setOfObjects);
 
         /** On ajoute un listener de touches du clavier
          */
@@ -109,11 +113,11 @@ public class Main extends Application {
                 switch (code) {
                     //Flèche droite
                     case RIGHT:
-                        setOfObjects.setToSlideLeft(true);
+                        eventMgr.manage("LEFT");
                         break;
                     //Flèche gauche
                     case LEFT:
-                        setOfObjects.setToSlideRight(true);
+                        eventMgr.manage("RIGHT");
                         break;
                     //Flèche haut
                     case UP:
@@ -140,9 +144,7 @@ public class Main extends Application {
                 String message = serial.readMessage();
 
                 if(message != null) {
-                    if (message.equals("LEFT")) {
-                        setOfObjects.setToSlideLeft(true);
-                    }
+                    eventMgr.manage(message);
                 }
 
                 gc.drawImage(fond, 0, 0); //on affiche le fond
