@@ -12,9 +12,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
-import objects.Time.Calendar;
-import objects.Time.Clock;
-import objects.Time.Date;
+import objects.time.Calendar;
+import objects.time.Clock;
+import objects.time.Date;
 import objects.abstracts.SetOfObjects;
 
 import java.util.List;
