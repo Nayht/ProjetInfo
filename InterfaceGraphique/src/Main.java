@@ -72,24 +72,24 @@ public class Main extends Application {
 
         //PAGE 2
         setOfObjects.addPanel(); //on ajoute un panel
-        setOfObjects.appendCadrePercent(0.025,0.03,0.95, 0.94, 0.05,0.05,1); //on ajoute un cadre à ce panel
+        setOfObjects.appendCadrePercent(0.025,0.03,0.95, 0.94, 0.05,0.05,1);
         setOfObjects.appendObjectPercent(new Clock(0,0,gc), 0.43,0.50,1); //on ajoute un objet à ce panel
 
         //PAGE 3
         setOfObjects.addPanel();
-        setOfObjects.appendCadre(30,30,width-60, height-60, 50,50,2);
+        setOfObjects.appendCadrePercent(0.025,0.03,0.95, 0.94, 0.05,0.05,2);
 
         //PAGE 4
         setOfObjects.addPanel();
-        setOfObjects.appendCadre(30,30,width-60, height-60, 50,50,3);
+        setOfObjects.appendCadrePercent(0.025,0.03,0.95, 0.94, 0.05,0.05,3);
 
         //PAGE 5
         setOfObjects.addPanel();
-        setOfObjects.appendCadre(30,30,width-60, height-60, 50,50,4);
+        setOfObjects.appendCadrePercent(0.025,0.03,0.95, 0.94, 0.05,0.05,4);
 
         //PAGE 6
         setOfObjects.addPanel();
-        setOfObjects.appendCadre(30,30,width-60, height-60, 50,50,5);
+        setOfObjects.appendCadrePercent(0.025,0.03,0.95, 0.94, 0.05,0.05,5);
 
 
         /** On ajoute un listener de touches du clavier
