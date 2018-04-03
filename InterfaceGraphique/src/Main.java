@@ -41,6 +41,9 @@ public class Main extends Application {
         double xCanvasSize = width;
         double yCanvasSize = height;
 
+        RSSParser a = new RSSParser();
+        a.run();
+
         //On définit la scene sur laquelle le canvas sera présent
         Group group = new Group();
         Scene scene = new Scene(group, xCanvasSize, yCanvasSize);
