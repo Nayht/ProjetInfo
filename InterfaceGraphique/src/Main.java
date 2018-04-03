@@ -17,6 +17,7 @@ import objects.time.Clock;
 import objects.time.Date;
 import objects.abstracts.SetOfObjects;
 import objects.vumetre.Needle;
+import objects.vumetre.Vertical;
 
 import java.util.List;
 
@@ -84,6 +85,7 @@ public class Main extends Application {
         //PAGE 4
         setOfObjects.addPanel();
         setOfObjects.appendCadrePercent(0.025,0.03,0.95, 0.94, 0.05,0.05,3);
+        setOfObjects.appendObjectPercent(new Vertical(0,0,gc,1,"up"),0.05,0.1,3);
 
         //PAGE 5
         setOfObjects.addPanel();

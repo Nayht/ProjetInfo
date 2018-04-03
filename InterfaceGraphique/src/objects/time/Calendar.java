@@ -119,7 +119,6 @@ public class Calendar extends AbstractObject{
         while (counterNbDayOfWeek>6){
             counterNbDayOfWeek-=7;
         }
-        System.out.print(counterNbDayOfWeek);
         while (counter<=amountDayInThisMonth){
             if (counterNbDayOfWeek>6){
                 counterNbDayOfWeek=0;
