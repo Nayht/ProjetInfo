@@ -18,6 +18,7 @@ import objects.time.Date;
 import objects.abstracts.SetOfObjects;
 import objects.vumetre.Needle;
 import objects.vumetre.Vertical;
+import rssFlux.RSSParser;
 
 import java.util.List;
 
@@ -66,6 +67,9 @@ public class Main extends Application {
         //On définit un set d'objets
         SetOfObjects setOfObjects = new SetOfObjects(canvas);
 
+
+
+
         //PAGE 1
         setOfObjects.appendCadrePercent(0.025,0.03,0.95, 0.94, 0.05,0.05,0); //on ajoute un cadre à ce panel
         setOfObjects.appendObjectPercent(new Clock(0,0, gc, "Helvetica",FontWeight.SEMI_BOLD,width*0.025), 0.05, 0.08, 0); //on ajoute une horloge au premier panel
@@ -94,7 +98,6 @@ public class Main extends Application {
         //PAGE 6
         setOfObjects.addPanel();
         setOfObjects.appendCadrePercent(0.025,0.03,0.95, 0.94, 0.05,0.05,5);
-
 
         /** On ajoute un listener de touches du clavier
          */
