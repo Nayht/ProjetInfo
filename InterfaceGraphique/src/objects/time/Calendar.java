@@ -10,8 +10,8 @@ import java.time.LocalDateTime;
 
 public class Calendar extends AbstractObject{
 
-    private int size;
-    private int textSize;
+    private double size;
+    private double textSize;
     private Date date;
     private TextObject[] labels;
     private String familyFont;
@@ -24,11 +24,11 @@ public class Calendar extends AbstractObject{
         this(x,y,gc,2);
     }
 
-    public Calendar(double x, double y, GraphicsContext gc, int size){
+    public Calendar(double x, double y, GraphicsContext gc, double size){
         this(x,y,gc,size,"Arial",FontWeight.SEMI_BOLD);
     }
 
-    public Calendar(double x, double y, GraphicsContext gc, int size, String familyFont, FontWeight fontWeight){
+    public Calendar(double x, double y, GraphicsContext gc, double size, String familyFont, FontWeight fontWeight){
         super(x,y,gc);
         this.size=size;
         this.textSize=20*this.size;

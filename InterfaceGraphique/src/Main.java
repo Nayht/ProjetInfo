@@ -32,8 +32,8 @@ public class Main extends Application {
     @Override
     public void start(Stage stage) throws Exception{
         //Largeur et hauteur arbitraires, utiles tout au long de la définition des objets
-        double width=1200;
-        double height=1000;
+        double width=800;
+        double height=600;
         //On définit la taille du canvas qui va accueillir les images
         double xCanvasSize = width;
         double yCanvasSize = height;
@@ -65,31 +65,31 @@ public class Main extends Application {
         SetOfObjects setOfObjects = new SetOfObjects(canvas);
 
         //PAGE 1
-        setOfObjects.appendCadre(30,30,width-60, height-60, 50,50); //on ajoute un cadre au premier panel
-        setOfObjects.appendObject(new Clock(60,80, gc, "Helvetica",FontWeight.SEMI_BOLD,28)); //on ajoute une horloge au premier panel
-        setOfObjects.appendObject(new Date(width-240,80, gc, "Helvetica",FontWeight.SEMI_BOLD,28)); //on ajoute une horloge au premier panel
-        setOfObjects.appendObject(new Calendar(60,100, gc,2)); //on ajoute une horloge au premier panel
+        setOfObjects.appendCadrePercent(0.025,0.03,0.95, 0.94, 0.05,0.05,0); //on ajoute un cadre à ce panel
+        setOfObjects.appendObjectPercent(new Clock(0,0, gc, "Helvetica",FontWeight.SEMI_BOLD,width*0.025), 0.05, 0.08, 0); //on ajoute une horloge au premier panel
+        setOfObjects.appendObjectPercent(new Date(0,0, gc, "Helvetica",FontWeight.SEMI_BOLD,width*0.025), 0.80, 0.08, 0); //on ajoute une horloge au premier panel
+        setOfObjects.appendObjectPercent(new Calendar(0.05*width,0.1*height, gc,width*0.002), 0.05, 0.1,0); //on ajoute une horloge au premier panel
 
         //PAGE 2
         setOfObjects.addPanel(); //on ajoute un panel
-        setOfObjects.appendCadre(30+width,30,width-60, height-60, 50,50); //on ajoute un cadre à ce panel
-        setOfObjects.appendObject(new Clock(60,160,gc), 550,500,1); //on ajoute un objet à ce panel
+        setOfObjects.appendCadrePercent(0.025,0.03,0.95, 0.94, 0.05,0.05,1); //on ajoute un cadre à ce panel
+        setOfObjects.appendObjectPercent(new Clock(0,0,gc), 0.43,0.50,1); //on ajoute un objet à ce panel
 
         //PAGE 3
         setOfObjects.addPanel();
-        setOfObjects.appendCadre(30+2*width,30,width-60, height-60, 50,50);
+        setOfObjects.appendCadre(30,30,width-60, height-60, 50,50,2);
 
         //PAGE 4
         setOfObjects.addPanel();
-        setOfObjects.appendCadre(30+3*width,30,width-60, height-60, 50,50);
+        setOfObjects.appendCadre(30,30,width-60, height-60, 50,50,3);
 
         //PAGE 5
         setOfObjects.addPanel();
-        setOfObjects.appendCadre(30+4*width,30,width-60, height-60, 50,50);
+        setOfObjects.appendCadre(30,30,width-60, height-60, 50,50,4);
 
         //PAGE 6
         setOfObjects.addPanel();
-        setOfObjects.appendCadre(30+5*width,30,width-60, height-60, 50,50);
+        setOfObjects.appendCadre(30,30,width-60, height-60, 50,50,5);
 
 
         /** On ajoute un listener de touches du clavier

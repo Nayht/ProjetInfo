@@ -66,6 +66,18 @@ public class SetOfObjects {
         this.objects.add(newObject);
     }
 
+    /** Ajoute un nouvel objet. Les coordonnées sont définies par xOnPanel et yOnPanel, sur la page nbPanel
+     * @param newObject objet à ajouter
+     * @param xPercentOnPanel pourcentage x de l'objet sur la page
+     * @param yPercentOnPanel pourcentage y de l'objet sur la page
+     * @param nbPanel page sur laquelle doit se trouver l'objet
+     */
+    public void appendObjectPercent(AbstractObject newObject, double xPercentOnPanel, double yPercentOnPanel, int nbPanel) {
+        newObject.setX(xPercentOnPanel*this.canvas.getWidth()+nbPanel*this.canvas.getWidth());
+        newObject.setY(yPercentOnPanel*this.canvas.getHeight());
+        this.objects.add(newObject);
+    }
+
     /** Ajout d'un cadre
      * @param x coordonnée x du début du cadre
      * @param y coordonnée y du début du cadre
@@ -74,8 +86,22 @@ public class SetOfObjects {
      * @param arcWidth largeur des angles arrondis
      * @param arcHeight hauteur des angles arrondis
      */
-    public void appendCadre(double x, double y, double width, double height, double arcWidth, double arcHeight) {
-        this.objects.add(new Cadre(x, y, width, height, arcWidth, arcHeight, this.gc));
+    public void appendCadre(double x, double y, double width, double height, double arcWidth, double arcHeight, int nbPanel) {
+        this.objects.add(new Cadre(x+nbPanel*this.canvas.getWidth(), y, width, height, arcWidth, arcHeight, this.gc));
+    }
+
+    /** Ajout d'un cadre
+     * @param percentXMin pourcentage x du début du cadre entre 0 et 1
+     * @param percentYMin pourcentage y du début du cadre entre 0 et 1
+     * @param percentWidth pourcentage largeur du cadre entre 0 et 1
+     * @param percentHeight pourcentage hauteur du cadre entre 0 et 1
+     * @param percentArcWidth pourcentage largeur des angles arrondis entre 0 et 1
+     * @param percentArcHeight pourcentage hauteur des angles arrondis entre 0 et 1
+     */
+    public void appendCadrePercent(double percentXMin, double percentYMin, double percentWidth, double percentHeight, double percentArcWidth, double percentArcHeight, int nbPanel) {
+        this.objects.add(new Cadre((percentXMin+nbPanel)*this.canvas.getWidth(), percentYMin*this.canvas.getHeight(),
+                percentWidth*this.canvas.getWidth(), percentHeight*this.canvas.getHeight(),
+                percentArcWidth*this.canvas.getWidth(), percentArcHeight*this.canvas.getHeight(), this.gc));
     }
 
     /** Permet d'ajouter un panel
