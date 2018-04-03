@@ -5,6 +5,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.FontWeight;
 import objects.abstracts.AbstractObject;
 import objects.abstracts.TextObject;
+import utils.Colors;
 
 import java.time.LocalDateTime;
 
@@ -132,7 +133,7 @@ public class Calendar extends AbstractObject{
                 text=Integer.toString(counter);
             }
             if (nbDayOfMonth==counter){
-                this.labels[counter+positionFirstDayOfMonth]=new TextObject(this.x+counterNbDayOfWeek*30*this.size+5*this.size, this.y+(nbWeekOfMonth+2)*30*this.size+20*this.size, gc, this.familyFont, this.fontWeight, this.textSize, Color.RED, text);
+                this.labels[counter+positionFirstDayOfMonth]=new TextObject(this.x+counterNbDayOfWeek*30*this.size+5*this.size, this.y+(nbWeekOfMonth+2)*30*this.size+20*this.size, gc, this.familyFont, this.fontWeight, this.textSize, Colors.RED.getColor(), text);
             }
             else{
                 this.labels[counter+positionFirstDayOfMonth]=new TextObject(this.x+counterNbDayOfWeek*30*this.size+5*this.size, this.y+(nbWeekOfMonth+2)*30*this.size+20*this.size, gc, this.familyFont, this.fontWeight, this.textSize, text);

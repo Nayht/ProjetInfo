@@ -71,9 +71,9 @@ public class TextObject extends AbstractObject {
         Font oldFont = super.gc.getFont();
         Paint oldColor = super.gc.getFill();
         super.gc.setFont(this.font);
-        super.gc.setStroke(this.color);
-        super.gc.strokeText(this.text, this.x, this.y);
-        super.gc.setStroke(oldColor);
+        super.gc.setFill(this.color);
+        super.gc.fillText(this.text, this.x, this.y);
+        super.gc.setFill(oldColor);
         super.gc.setFont(oldFont);
     }
 

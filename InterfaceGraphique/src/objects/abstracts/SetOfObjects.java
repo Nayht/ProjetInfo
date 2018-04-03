@@ -39,7 +39,7 @@ public class SetOfObjects {
         this.startY = 0;
         this.vx = 0;
         this.vy = 0;
-        this.maxSpeed=50;
+        this.maxSpeed=30;
         this.inLongMovement = false;
         this.toSlideLeft=false;
         this.toSlideRight=false;

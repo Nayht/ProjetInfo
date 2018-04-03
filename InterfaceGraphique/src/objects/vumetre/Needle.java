@@ -4,6 +4,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.ArcType;
 import objects.abstracts.AbstractObject;
+import utils.Colors;
 
 public class Needle extends AbstractObject {
 
@@ -75,9 +76,9 @@ public class Needle extends AbstractObject {
 
     @Override
     public void display(){
-        gc.setStroke(Color.RED);
+        gc.setStroke(Colors.RED.getColor());
         gc.strokeLine(this.x, this.y,this.x+Math.cos(this.angle*Math.PI/180)*this.lengthNeedle,this.y-Math.sin(this.angle*Math.PI/180)*this.lengthNeedle);
-        gc.setStroke(Color.WHITE);
+        gc.setStroke(Colors.WHITE.getColor());
         //gc.setGlobalAlpha(this.alphaValue);
         gc.fillArc(this.x-this.lengthNeedle, this.y-this.lengthNeedle, this.lengthNeedle*2, this.lengthNeedle*2, angleMin, angleMax-angleMin, ArcType.ROUND);
         //gc.setGlobalAlpha(1);

@@ -18,6 +18,7 @@ import objects.time.Date;
 import objects.abstracts.SetOfObjects;
 import objects.vumetre.Needle;
 import objects.vumetre.Vertical;
+import utils.Colors;
 
 import java.awt.*;
 import java.util.List;
@@ -58,8 +59,8 @@ public class Main extends Application {
         GraphicsContext gc = canvas.getGraphicsContext2D();
         //On définit la police de base du GC
         gc.setFont(Font.font("Arial", FontWeight.SEMI_BOLD, width*0.025));
-        gc.setFill(Color.WHITE);
-        gc.setStroke(Color.WHITE);
+        gc.setFill(Colors.WHITE.getColor());
+        gc.setStroke(Colors.WHITE.getColor());
         gc.setLineWidth(3);
 
         //On charge l'image de fond
