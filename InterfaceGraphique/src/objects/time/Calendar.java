@@ -109,7 +109,7 @@ public class Calendar extends AbstractObject{
             else{
                 daySymbol=" D";
             }
-            this.labels[i]=new TextObject(this.x+i*30*this.size+5*this.size, this.y+30*this.size+20*this.size, gc, this.familyFont, this.fontWeight, this.textSize, daySymbol);
+            this.labels[i]=new TextObject(this.x+i*29*this.size+12*this.size, this.y+30*this.size+20*this.size, gc, this.familyFont, this.fontWeight, this.textSize, daySymbol);
         }
         int counter=1;
         int counterNbDayOfWeek=(nbDayOfWeek-nbDayOfMonth)+1;

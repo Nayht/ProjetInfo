@@ -32,8 +32,8 @@ public class Main extends Application {
     @Override
     public void start(Stage stage) throws Exception{
         //Largeur et hauteur arbitraires, utiles tout au long de la définition des objets
-        double width=800;
-        double height=600;
+        double width=600;
+        double height=400;
         //On définit la taille du canvas qui va accueillir les images
         double xCanvasSize = width;
         double yCanvasSize = height;
@@ -53,7 +53,7 @@ public class Main extends Application {
         //On récupère le contexte graphique 2D (GC) du canvas (interface permettant d'ajouter des objets)
         GraphicsContext gc = canvas.getGraphicsContext2D();
         //On définit la police de base du GC
-        gc.setFont(Font.font("Arial", FontWeight.SEMI_BOLD, 48));
+        gc.setFont(Font.font("Arial", FontWeight.SEMI_BOLD, width*0.025));
         gc.setFill(Color.WHITE);
         gc.setStroke(Color.WHITE);
         gc.setLineWidth(3);
