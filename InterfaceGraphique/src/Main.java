@@ -18,8 +18,8 @@ import objects.time.Date;
 import objects.abstracts.SetOfObjects;
 import objects.vumetre.Needle;
 import objects.vumetre.Vertical;
-import rssFlux.RSSParser;
 
+import java.awt.*;
 import java.util.List;
 
 public class Main extends Application {
@@ -35,14 +35,12 @@ public class Main extends Application {
     @Override
     public void start(Stage stage) throws Exception{
         //Largeur et hauteur arbitraires, utiles tout au long de la définition des objets
-        double width=1200;
-        double height=1000;
+        GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+        double width = gd.getDisplayMode().getWidth()/1.6;
+        double height = gd.getDisplayMode().getHeight()/1.2;
         //On définit la taille du canvas qui va accueillir les images
         double xCanvasSize = width;
         double yCanvasSize = height;
-
-        RSSParser a = new RSSParser();
-        a.run();
 
         //On définit la scene sur laquelle le canvas sera présent
         Group group = new Group();
@@ -77,7 +75,7 @@ public class Main extends Application {
         setOfObjects.appendCadrePercent(0.025,0.03,0.95, 0.94, 0.05,0.05,0); //on ajoute un cadre à ce panel
         setOfObjects.appendObjectPercent(new Clock(0,0, gc, "Helvetica",FontWeight.SEMI_BOLD,width*0.025), 0.05, 0.08, 0); //on ajoute une horloge au premier panel
         setOfObjects.appendObjectPercent(new Date(0,0, gc, "Helvetica",FontWeight.SEMI_BOLD,width*0.025), 0.80, 0.08, 0); //on ajoute une horloge au premier panel
-        setOfObjects.appendObjectPercent(new Calendar(0.05*width,0.1*height, gc,width*0.002), 0.05, 0.1,0); //on ajoute une horloge au premier panel
+        setOfObjects.appendObjectPercent(new Calendar(0.05*width,0.1*height, gc,width*0.0015), 0.05, 0.1,0); //on ajoute une horloge au premier panel
 
         //PAGE 2
         setOfObjects.addPanel(); //on ajoute un panel
