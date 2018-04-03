@@ -16,6 +16,7 @@ import objects.time.Calendar;
 import objects.time.Clock;
 import objects.time.Date;
 import objects.abstracts.SetOfObjects;
+import objects.vumetre.Needle;
 
 import java.util.List;
 
@@ -32,8 +33,8 @@ public class Main extends Application {
     @Override
     public void start(Stage stage) throws Exception{
         //Largeur et hauteur arbitraires, utiles tout au long de la définition des objets
-        double width=600;
-        double height=400;
+        double width=1200;
+        double height=1000;
         //On définit la taille du canvas qui va accueillir les images
         double xCanvasSize = width;
         double yCanvasSize = height;
@@ -78,6 +79,7 @@ public class Main extends Application {
         //PAGE 3
         setOfObjects.addPanel();
         setOfObjects.appendCadrePercent(0.025,0.03,0.95, 0.94, 0.05,0.05,2);
+        setOfObjects.appendObjectPercent(new Needle(0,0,gc,0.3,0,10,100), 0.5,0.5,2);
 
         //PAGE 4
         setOfObjects.addPanel();

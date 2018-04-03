@@ -6,6 +6,7 @@ public abstract class AbstractObject {
     protected double x;
     protected double y;
     protected GraphicsContext gc;
+    protected double alphaValue;
 
     /** Crée un objet abstrait
      * @param x coordonnée x
@@ -13,9 +14,19 @@ public abstract class AbstractObject {
      * @param gc contexte graphique
      */
     public AbstractObject(double x, double y, GraphicsContext gc){
+        this(x,y,gc,1);
+    }
+
+    /** Crée un objet abstrait
+     * @param x coordonnée x
+     * @param y coordonnée y
+     * @param gc contexte graphique
+     */
+    public AbstractObject(double x, double y, GraphicsContext gc, double alphaValue){
         this.x=x;
         this.y=y;
         this.gc=gc;
+        this.alphaValue=alphaValue;
     }
 
     /** Renvoie la coordonnée X de l'objet
