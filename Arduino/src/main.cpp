@@ -49,6 +49,7 @@ void setup() {
     }
 
     // Adjust the Proximity sensor gain
+    /*
     if ( !apds.setProximityGain(PGAIN_1X) ) {
         Serial.println(F("Something went wrong trying to set PGAIN"));
     }
@@ -59,6 +60,7 @@ void setup() {
     } else {
         Serial.println(F("Something went wrong during sensor init!"));
     }
+     */
 }
 
 void loop() {
@@ -76,7 +78,9 @@ void interruptRoutine() {
 }
 
 void handleGesture() {
+    Serial.println("Handle");
     if (apds.isGestureAvailable()) {
+        Serial.println("Available");
         switch (apds.readGesture()) {
             case DIR_UP:
                 Serial.println("UP");
@@ -94,13 +98,14 @@ void handleGesture() {
                 MIDI.sendNoteOff(88,120,1);
                 break;
             default:
-                if (!apds.readProximity(proximity_data)) {
+                /*if (!apds.readProximity(proximity_data)) {
                     Serial.println("Error reading proximity value");
                 } else {
                     Serial.print("Proximity: ");
                     Serial.println(proximity_data);
                 }
                 // Wait 250 ms before next reading (originalement)
+                */
                 delay(10);
         }
     }

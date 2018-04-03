@@ -561,10 +561,10 @@ int SparkFun_APDS9960::readGesture()
             delay(FIFO_PAUSE_TIME);
             decodeGesture();
             motion = gesture_motion_;
-#if DEBUG
+//#if DEBUG
             Serial.print("END: ");
             Serial.println(gesture_motion_);
-#endif
+//#endif
             resetGestureParameters();
             return motion;
         }
@@ -682,7 +682,7 @@ bool SparkFun_APDS9960::readGreenLight(uint16_t &val)
 }
 
 /**
- * @brief Reads the red light level as a 16-bit value
+ * @brief Reads the blue light level as a 16-bit value
  *
  * @param[out] val value of the light sensor.
  * @return True if operation successful. False otherwise.
@@ -963,6 +963,8 @@ bool SparkFun_APDS9960::processGestureData()
  */
 bool SparkFun_APDS9960::decodeGesture()
 {
+    Serial.println(gesture_ud_count_);
+    Serial.println(gesture_lr_count_);
     /* Return if near or far event is detected */
     if( gesture_state_ == NEAR_STATE ) {
         gesture_motion_ = DIR_NEAR;
