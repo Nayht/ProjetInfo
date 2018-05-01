@@ -153,10 +153,10 @@
 #define GWTIME_39_2MS           7
 
 /* Default values */
-#define DEFAULT_ATIME           219     // 103ms
-#define DEFAULT_WTIME           246     // 27ms
+#define DEFAULT_ATIME           246     // 103ms
+#define DEFAULT_WTIME           255     // 27ms
 #define DEFAULT_PROX_PPULSE     0x87    // 16us, 8 pulses
-#define DEFAULT_GESTURE_PPULSE  0x89    // 16us, 10 pulses
+#define DEFAULT_GESTURE_PPULSE  0x09    // 4us, 10 pulses
 #define DEFAULT_POFFSET_UR      0       // 0 offset
 #define DEFAULT_POFFSET_DL      0       // 0 offset
 #define DEFAULT_CONFIG1         0x60    // No 12x wait (WTIME) factor

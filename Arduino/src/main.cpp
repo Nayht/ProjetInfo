@@ -5,7 +5,7 @@
 #include "SparkFun_APDS9960.h"
 
 // Pins
-#define APDS9960_INT    2 // Needs to be an interrupt pin
+#define APDS9960_INT    24 // Needs to be an interrupt pin
 
 void interruptRoutine();
 void handleGesture();
@@ -21,18 +21,22 @@ uint8_t proximity_data = 0;
 MIDI_CREATE_DEFAULT_INSTANCE();
 
 void setup() {
+    pinMode(LED_BUILTIN,OUTPUT);
+    digitalWrite(LED_BUILTIN,HIGH);
+    delay(2000);
+    digitalWrite(LED_BUILTIN,LOW);
 
     // Set interrupt pin as input
-    pinMode(APDS9960_INT, INPUT);
+    pinMode(APDS9960_INT, INPUT_PULLUP);
 
     // Initialize Serial port
     Serial.begin(115200);
 
     //Initialize MIDI
-    MIDI.begin();
+//    MIDI.begin();
 
     // Initialize interrupt service routine
-    attachInterrupt(0, interruptRoutine, FALLING);
+    attachInterrupt(APDS9960_INT, interruptRoutine, FALLING);
 
     // Initialize APDS-9960 (configure I2C and initial values)
     if ( apds.init() ) {
@@ -66,10 +70,12 @@ void setup() {
 void loop() {
     if(isr_flag==1)
     {
+        digitalWrite(LED_BUILTIN,HIGH);
         detachInterrupt(0);
         handleGesture();
         isr_flag = 0;
         attachInterrupt(0,interruptRoutine,FALLING);
+        digitalWrite(LED_BUILTIN,LOW);
     }
 }
 
@@ -78,9 +84,9 @@ void interruptRoutine() {
 }
 
 void handleGesture() {
-    Serial.println("Handle");
+//    Serial.println("Handle");
     if (apds.isGestureAvailable()) {
-        Serial.println("Available");
+//        Serial.println("Available");
         switch (apds.readGesture()) {
             case DIR_UP:
                 Serial.println("UP");
@@ -93,9 +99,9 @@ void handleGesture() {
                 break;
             case DIR_RIGHT:
                 Serial.println("RIGHT");
-                MIDI.sendNoteOn(88,120,1);
-                delay(500);
-                MIDI.sendNoteOff(88,120,1);
+//                MIDI.sendNoteOn(88,120,1);
+//                delay(500);
+//                MIDI.sendNoteOff(88,120,1);
                 break;
             default:
                 /*if (!apds.readProximity(proximity_data)) {

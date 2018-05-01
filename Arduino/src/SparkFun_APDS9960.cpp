@@ -61,105 +61,137 @@ bool SparkFun_APDS9960::init()
      
     /* Read ID register and check against known values for APDS-9960 */
     if( !wireReadDataByte(APDS9960_ID, id) ) {
+        Serial.println("-4");
         return false;
     }
     if( !(id == APDS9960_ID_1 || id == APDS9960_ID_2) ) {
+        Serial.println("-3");
         return false;
     }
      
     /* Set ENABLE register to 0 (disable all features) */
     if( !setMode(ALL, OFF) ) {
+        Serial.println("-2");
         return false;
     }
     
     /* Set default values for ambient light and proximity registers */
     if( !wireWriteDataByte(APDS9960_ATIME, DEFAULT_ATIME) ) {
+        Serial.println("-1");
         return false;
     }
     if( !wireWriteDataByte(APDS9960_WTIME, DEFAULT_WTIME) ) {
+        Serial.println("0");
         return false;
     }
     if( !wireWriteDataByte(APDS9960_PPULSE, DEFAULT_PROX_PPULSE) ) {
+        Serial.println("1");
         return false;
     }
     if( !wireWriteDataByte(APDS9960_POFFSET_UR, DEFAULT_POFFSET_UR) ) {
+        Serial.println("2");
         return false;
     }
     if( !wireWriteDataByte(APDS9960_POFFSET_DL, DEFAULT_POFFSET_DL) ) {
+        Serial.println("3");
         return false;
     }
     if( !wireWriteDataByte(APDS9960_CONFIG1, DEFAULT_CONFIG1) ) {
+        Serial.println("4");
         return false;
     }
     if( !setLEDDrive(DEFAULT_LDRIVE) ) {
+        Serial.println("5");
         return false;
     }
     if( !setProximityGain(DEFAULT_PGAIN) ) {
+        Serial.println("6");
         return false;
     }
     if( !setAmbientLightGain(DEFAULT_AGAIN) ) {
+        Serial.println("7");
         return false;
     }
     if( !setProxIntLowThresh(DEFAULT_PILT) ) {
+        Serial.println("8");
         return false;
     }
     if( !setProxIntHighThresh(DEFAULT_PIHT) ) {
+        Serial.println("9");
         return false;
     }
     if( !setLightIntLowThreshold(DEFAULT_AILT) ) {
+        Serial.println("10");
         return false;
     }
     if( !setLightIntHighThreshold(DEFAULT_AIHT) ) {
+        Serial.println("11");
         return false;
     }
     if( !wireWriteDataByte(APDS9960_PERS, DEFAULT_PERS) ) {
+        Serial.println("12");
         return false;
     }
     if( !wireWriteDataByte(APDS9960_CONFIG2, DEFAULT_CONFIG2) ) {
+        Serial.println("13");
         return false;
     }
     if( !wireWriteDataByte(APDS9960_CONFIG3, DEFAULT_CONFIG3) ) {
+        Serial.println("14");
         return false;
     }
     
     /* Set default values for gesture sense registers */
     if( !setGestureEnterThresh(DEFAULT_GPENTH) ) {
+        Serial.println("15");
         return false;
     }
     if( !setGestureExitThresh(DEFAULT_GEXTH) ) {
+        Serial.println("16");
         return false;
     }
     if( !wireWriteDataByte(APDS9960_GCONF1, DEFAULT_GCONF1) ) {
+        Serial.println("17");
         return false;
     }
     if( !setGestureGain(DEFAULT_GGAIN) ) {
+        Serial.println("18");
         return false;
     }
     if( !setGestureLEDDrive(DEFAULT_GLDRIVE) ) {
+        Serial.println("19");
         return false;
     }
     if( !setGestureWaitTime(DEFAULT_GWTIME) ) {
+        Serial.println("20");
         return false;
     }
     if( !wireWriteDataByte(APDS9960_GOFFSET_U, DEFAULT_GOFFSET) ) {
+        Serial.println("21");
         return false;
     }
     if( !wireWriteDataByte(APDS9960_GOFFSET_D, DEFAULT_GOFFSET) ) {
+        Serial.println("22");
         return false;
     }
     if( !wireWriteDataByte(APDS9960_GOFFSET_L, DEFAULT_GOFFSET) ) {
+        Serial.println("23");
         return false;
     }
     if( !wireWriteDataByte(APDS9960_GOFFSET_R, DEFAULT_GOFFSET) ) {
+        Serial.println("24");
         return false;
     }
     if( !wireWriteDataByte(APDS9960_GPULSE, DEFAULT_GPULSE) ) {
+        Serial.println("25");
         return false;
     }
     if( !wireWriteDataByte(APDS9960_GCONF3, DEFAULT_GCONF3) ) {
+        Serial.println("26");
         return false;
     }
     if( !setGestureIntEnable(DEFAULT_GIEN) ) {
+        Serial.println("27");
         return false;
     }
     
