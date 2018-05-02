@@ -183,7 +183,7 @@
 #define DEFAULT_GIEN            0       // Disable gesture interrupts
 
 /* Direction definitions */
-enum {
+enum directions{
   DIR_NONE,
   DIR_LEFT,
   DIR_RIGHT,
