@@ -71,7 +71,7 @@ void setup() {
         Serial.println(F("Right gesture initilization failed"));
     }
 
-    // Adjust the Proximity sensor gain
+    /*// Adjust the Proximity sensor gain
     if ( !leftGestureSensor.setProximityGain(PGAIN_1X) ) {
         Serial.println(F("Something went wrong trying to set PGAIN on left sensor"));
     }
@@ -81,11 +81,16 @@ void setup() {
     }
 
     // Start running the APDS-9960 proximity sensor (no interrupts)
-    if ( rightGestureSensor.enableProximitySensor(false) ) {
+    if ( leftGestureSensor.enableProximitySensor(false) ) {
         Serial.println(F("Left proximity sensor is now running"));
     } else {
-        Serial.println(F("Right proximity sensor initialization failed"));
+        Serial.println(F("Left proximity sensor initialization failed"));
     }
+    if ( rightGestureSensor.enableProximitySensor(false) ) {
+        Serial.println(F("Right proximity sensor is now running"));
+    } else {
+        Serial.println(F("Right proximity sensor initialization failed"));
+    }*/
 }
 
 void loop() {
