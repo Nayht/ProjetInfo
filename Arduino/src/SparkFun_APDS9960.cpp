@@ -15,16 +15,13 @@
  *   Waiting for gesture:   14mA
  *   Gesture in progress:   35mA
  */
- 
- #include <Arduino.h>
- #include <Wire.h>
- 
+
  #include "SparkFun_APDS9960.h"
  
 /**
  * @brief Constructor - Instantiates SparkFun_APDS9960 object
  */
-SparkFun_APDS9960::SparkFun_APDS9960()
+SparkFun_APDS9960::SparkFun_APDS9960(String prefix):gesturePrefix(prefix)
 {
     gesture_ud_delta_ = 0;
     gesture_lr_delta_ = 0;
@@ -52,13 +49,31 @@ SparkFun_APDS9960::~SparkFun_APDS9960()
  *
  * @return True if initialized successfully. False otherwise.
  */
-bool SparkFun_APDS9960::init()
+bool SparkFun_APDS9960::init(int wireInterface)
 {
     uint8_t id;
 
     /* Initialize I2C */
-    Wire.begin();
-     
+    switch (wireInterface)
+    {
+        case 1:
+        {
+            this->wireInterface = &Wire1;
+            this->wireInterface->begin(I2C_MASTER,0x00,I2C_PINS_37_38);
+            break;
+        }
+        case 2:
+        {
+            this->wireInterface = &Wire2;
+            this->wireInterface->begin(I2C_MASTER,0x00,I2C_PINS_3_4);
+            break;
+        }
+        default:
+        {
+            this->wireInterface = &Wire;
+            this->wireInterface->begin();
+        }
+    }
     /* Read ID register and check against known values for APDS-9960 */
     if( !wireReadDataByte(APDS9960_ID, id) ) {
         Serial.println("-4");
@@ -501,15 +516,18 @@ int SparkFun_APDS9960::readGesture()
     uint8_t gstatus;
     int motion;
     int i;
-    
+//    Serial.println("Available?");
     /* Make sure that power and gesture is on and data is valid */
     if( !isGestureAvailable() || !(getMode() & 0b01000001) ) {
+//        Serial.println("no");
         return DIR_NONE;
     }
+//    Serial.println("yes");
     
     /* Keep looping as long as gesture data is valid */
     while(1) {
-    
+
+//        Serial.println("Loop start");
         /* Wait some time to collect next batch of FIFO data */
         delay(FIFO_PAUSE_TIME);
         
@@ -593,13 +611,14 @@ int SparkFun_APDS9960::readGesture()
             delay(FIFO_PAUSE_TIME);
             decodeGesture();
             motion = gesture_motion_;
-//#if DEBUG
+#if DEBUG
             Serial.print("END: ");
             Serial.println(gesture_motion_);
-//#endif
+#endif
             resetGestureParameters();
             return motion;
         }
+//        Serial.println("Loop end");
     }
 }
 
@@ -995,8 +1014,12 @@ bool SparkFun_APDS9960::processGestureData()
  */
 bool SparkFun_APDS9960::decodeGesture()
 {
+#if DEBUG
+    Serial.print("Gesture up-down: ");
     Serial.println(gesture_ud_count_);
+    Serial.print("Gesture left-right: ");
     Serial.println(gesture_lr_count_);
+#endif
     /* Return if near or far event is detected */
     if( gesture_state_ == NEAR_STATE ) {
         gesture_motion_ = DIR_NEAR;
@@ -2137,9 +2160,9 @@ bool SparkFun_APDS9960::setGestureMode(uint8_t mode)
  */
 bool SparkFun_APDS9960::wireWriteByte(uint8_t val)
 {
-    Wire.beginTransmission(APDS9960_I2C_ADDR);
-    Wire.write(val);
-    if( Wire.endTransmission() != 0 ) {
+    wireInterface->beginTransmission(APDS9960_I2C_ADDR);
+    wireInterface->write(val);
+    if( wireInterface->endTransmission() != 0 ) {
         return false;
     }
     
@@ -2155,10 +2178,10 @@ bool SparkFun_APDS9960::wireWriteByte(uint8_t val)
  */
 bool SparkFun_APDS9960::wireWriteDataByte(uint8_t reg, uint8_t val)
 {
-    Wire.beginTransmission(APDS9960_I2C_ADDR);
-    Wire.write(reg);
-    Wire.write(val);
-    if( Wire.endTransmission() != 0 ) {
+    wireInterface->beginTransmission(APDS9960_I2C_ADDR);
+    wireInterface->write(reg);
+    wireInterface->write(val);
+    if( wireInterface->endTransmission() != 0 ) {
         return false;
     }
 
@@ -2179,12 +2202,12 @@ bool SparkFun_APDS9960::wireWriteDataBlock(  uint8_t reg,
 {
     unsigned int i;
 
-    Wire.beginTransmission(APDS9960_I2C_ADDR);
-    Wire.write(reg);
+    wireInterface->beginTransmission(APDS9960_I2C_ADDR);
+    wireInterface->write(reg);
     for(i = 0; i < len; i++) {
-        Wire.beginTransmission(val[i]);
+        wireInterface->beginTransmission(val[i]);
     }
-    if( Wire.endTransmission() != 0 ) {
+    if( wireInterface->endTransmission() != 0 ) {
         return false;
     }
 
@@ -2207,9 +2230,9 @@ bool SparkFun_APDS9960::wireReadDataByte(uint8_t reg, uint8_t &val)
     }
     
     /* Read from register */
-    Wire.requestFrom(APDS9960_I2C_ADDR, 1);
-    while (Wire.available()) {
-        val = Wire.read();
+    wireInterface->requestFrom(APDS9960_I2C_ADDR, 1);
+    while (wireInterface->available()) {
+        val = wireInterface->read();
     }
 
     return true;
@@ -2225,7 +2248,7 @@ bool SparkFun_APDS9960::wireReadDataByte(uint8_t reg, uint8_t &val)
  */
 int SparkFun_APDS9960::wireReadDataBlock(   uint8_t reg, 
                                         uint8_t *val, 
-                                        unsigned int len)
+                                        int len)
 {
     unsigned char i = 0;
     
@@ -2235,14 +2258,19 @@ int SparkFun_APDS9960::wireReadDataBlock(   uint8_t reg,
     }
     
     /* Read block data */
-    Wire.requestFrom(APDS9960_I2C_ADDR, len);
-    while (Wire.available()) {
+    wireInterface->requestFrom(APDS9960_I2C_ADDR, len);
+    while (wireInterface->available()) {
         if (i >= len) {
             return -1;
         }
-        val[i] = Wire.read();
+        val[i] = wireInterface->read();
         i++;
     }
 
     return i;
+}
+
+String SparkFun_APDS9960::getPrefix()
+{
+    return(gesturePrefix);
 }

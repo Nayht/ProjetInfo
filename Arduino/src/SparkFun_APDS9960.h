@@ -15,6 +15,7 @@
 #define SparkFun_APDS9960_H
 
 #include <Arduino.h>
+#include <i2c_t3.h>
 
 /* Debug */
 #define DEBUG                   0
@@ -153,10 +154,10 @@
 #define GWTIME_39_2MS           7
 
 /* Default values */
-#define DEFAULT_ATIME           246     // 103ms
-#define DEFAULT_WTIME           255     // 27ms
+#define DEFAULT_ATIME           219//246     // 103ms
+#define DEFAULT_WTIME           246//255     // 27ms
 #define DEFAULT_PROX_PPULSE     0x87    // 16us, 8 pulses
-#define DEFAULT_GESTURE_PPULSE  0x09    // 4us, 10 pulses
+#define DEFAULT_GESTURE_PPULSE  0x89//0x09    // 4us, 10 pulses
 #define DEFAULT_POFFSET_UR      0       // 0 offset
 #define DEFAULT_POFFSET_DL      0       // 0 offset
 #define DEFAULT_CONFIG1         0x60    // No 12x wait (WTIME) factor
@@ -173,7 +174,7 @@
 #define DEFAULT_GPENTH          40      // Threshold for entering gesture mode
 #define DEFAULT_GEXTH           30      // Threshold for exiting gesture mode
 #define DEFAULT_GCONF1          0x40    // 4 gesture events for int., 1 for exit
-#define DEFAULT_GGAIN           GGAIN_4X
+#define DEFAULT_GGAIN           GGAIN_2X
 #define DEFAULT_GLDRIVE         LED_DRIVE_100MA
 #define DEFAULT_GWTIME          GWTIME_2_8MS
 #define DEFAULT_GOFFSET         0       // No offset scaling for gesture mode
@@ -218,9 +219,9 @@ class SparkFun_APDS9960 {
 public:
 
     /* Initialization methods */
-    SparkFun_APDS9960();
+    SparkFun_APDS9960(String = "");
     ~SparkFun_APDS9960();
-    bool init();
+    bool init(int = 0);
     uint8_t getMode();
     bool setMode(uint8_t mode, uint8_t enable);
 
@@ -287,7 +288,12 @@ public:
     bool isGestureAvailable();
     int readGesture();
 
+    String getPrefix();
+
 private:
+
+    i2c_t3* wireInterface;
+    const String gesturePrefix;
 
     /* Gesture processing */
     void resetGestureParameters();
@@ -329,7 +335,7 @@ private:
     bool wireWriteDataByte(uint8_t reg, uint8_t val);
     bool wireWriteDataBlock(uint8_t reg, uint8_t *val, unsigned int len);
     bool wireReadDataByte(uint8_t reg, uint8_t &val);
-    int wireReadDataBlock(uint8_t reg, uint8_t *val, unsigned int len);
+    int wireReadDataBlock(uint8_t reg, uint8_t *val, int len);
 
     /* Members */
     gesture_data_type gesture_data_;

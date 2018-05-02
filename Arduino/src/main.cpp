@@ -1,21 +1,25 @@
 #include <Arduino.h>
-#include <Wire.h>
 #include "MIDI/MIDI.h"
 
 #include "SparkFun_APDS9960.h"
 
 // Pins
-#define APDS9960_INT    24 // Needs to be an interrupt pin
+#define LEFT_GESTURE_PIN    24 // Needs to be an interrupt pin
+#define RIGHT_GESTURE_PIN 25
 
-void interruptRoutine();
-void handleGesture();
+void leftGestureDetection();
+void rightGestureDetection();
+void handleGesture(SparkFun_APDS9960);
 void cancerMIDI();
 
 // Constants
 
 // Global Variables
-SparkFun_APDS9960 apds = SparkFun_APDS9960();
-int isr_flag = 0;
+SparkFun_APDS9960 leftGestureSensor = SparkFun_APDS9960("Left: ");
+SparkFun_APDS9960 rightGestureSensor = SparkFun_APDS9960("Right: ");
+
+int leftGestureFlag = 0;
+int rightGestureFlag = 0;
 uint8_t proximity_data = 0;
 
 MIDI_CREATE_DEFAULT_INSTANCE();
@@ -27,7 +31,8 @@ void setup() {
     digitalWrite(LED_BUILTIN,LOW);
 
     // Set interrupt pin as input
-    pinMode(APDS9960_INT, INPUT_PULLUP);
+    pinMode(LEFT_GESTURE_PIN, INPUT);
+    pinMode(RIGHT_GESTURE_PIN, INPUT);
 
     // Initialize Serial port
     Serial.begin(115200);
@@ -36,72 +41,103 @@ void setup() {
 //    MIDI.begin();
 
     // Initialize interrupt service routine
-    attachInterrupt(APDS9960_INT, interruptRoutine, FALLING);
+    attachInterrupt(LEFT_GESTURE_PIN, leftGestureDetection, FALLING);
+    attachInterrupt(RIGHT_GESTURE_PIN, rightGestureDetection,FALLING);
+
 
     // Initialize APDS-9960 (configure I2C and initial values)
-    if ( apds.init() ) {
-        Serial.println(F("Initialization complete"));
+    if ( leftGestureSensor.init() ) {
+        Serial.println(F("Left sensor initialization complete"));
     } else {
-        Serial.println(F("Something went wrong during APDS-9960 init!"));
+        Serial.println(F("Left sensor initialization failed"));
+    }
+
+    if ( rightGestureSensor.init(1) ) {
+        Serial.println(F("Right sensor initialization complete"));
+    } else {
+        Serial.println(F("Right sensor initialization failed"));
     }
 
     // Start running the APDS-9960 gesture sensor engine
-    if ( apds.enableGestureSensor(true) ) {
-        Serial.println(F("Gesture sensor is now running"));
+    if ( leftGestureSensor.enableGestureSensor(true) ) {
+        Serial.println(F("Left gesture sensor is now running"));
     } else {
-        Serial.println(F("Something went wrong during gesture sensor init!"));
+        Serial.println(F("Left gesture initilization failed"));
+    }
+
+    if ( rightGestureSensor.enableGestureSensor(true) ) {
+        Serial.println(F("Right gesture sensor is now running"));
+    } else {
+        Serial.println(F("Right gesture initilization failed"));
     }
 
     // Adjust the Proximity sensor gain
-    /*
-    if ( !apds.setProximityGain(PGAIN_1X) ) {
-        Serial.println(F("Something went wrong trying to set PGAIN"));
+    if ( !leftGestureSensor.setProximityGain(PGAIN_1X) ) {
+        Serial.println(F("Something went wrong trying to set PGAIN on left sensor"));
+    }
+
+    if ( !rightGestureSensor.setProximityGain(PGAIN_1X) ) {
+        Serial.println(F("Something went wrong trying to set PGAIN on right sensor"));
     }
 
     // Start running the APDS-9960 proximity sensor (no interrupts)
-    if ( apds.enableProximitySensor(false) ) {
-        Serial.println(F("Proximity sensor is now running"));
+    if ( rightGestureSensor.enableProximitySensor(false) ) {
+        Serial.println(F("Left proximity sensor is now running"));
     } else {
-        Serial.println(F("Something went wrong during sensor init!"));
+        Serial.println(F("Right proximity sensor initialization failed"));
     }
-     */
 }
 
 void loop() {
-    if(isr_flag==1)
+    if(leftGestureFlag || rightGestureFlag)
     {
         digitalWrite(LED_BUILTIN,HIGH);
-        detachInterrupt(0);
-        handleGesture();
-        isr_flag = 0;
-        attachInterrupt(0,interruptRoutine,FALLING);
+        if(leftGestureFlag)
+        {
+            detachInterrupt(LEFT_GESTURE_PIN);
+            handleGesture(leftGestureSensor);
+            leftGestureFlag = 0;
+            attachInterrupt(LEFT_GESTURE_PIN,leftGestureDetection,FALLING);
+        }
+        if(rightGestureFlag)
+        {
+            detachInterrupt(RIGHT_GESTURE_PIN);
+            handleGesture(rightGestureSensor);
+            rightGestureFlag = 0;
+            attachInterrupt(RIGHT_GESTURE_PIN,rightGestureDetection,FALLING);
+        }
         digitalWrite(LED_BUILTIN,LOW);
     }
 }
 
-void interruptRoutine() {
-    isr_flag = 1;
+void leftGestureDetection() {
+    leftGestureFlag = 1;
 }
 
-void handleGesture() {
+void rightGestureDetection() {
+    rightGestureFlag = 1;
+}
+
+void handleGesture(SparkFun_APDS9960 sensor) {
 //    Serial.println("Handle");
-    if (apds.isGestureAvailable()) {
+    if (sensor.isGestureAvailable()) {
 //        Serial.println("Available");
-        switch (apds.readGesture()) {
+        switch (sensor.readGesture()) {
             case DIR_UP:
+                Serial.print(sensor.getPrefix());
                 Serial.println("UP");
                 break;
             case DIR_DOWN:
+                Serial.print(sensor.getPrefix());
                 Serial.println("DOWN");
                 break;
             case DIR_LEFT:
+                Serial.print(sensor.getPrefix());
                 Serial.println("LEFT");
                 break;
             case DIR_RIGHT:
+                Serial.print(sensor.getPrefix());
                 Serial.println("RIGHT");
-//                MIDI.sendNoteOn(88,120,1);
-//                delay(500);
-//                MIDI.sendNoteOff(88,120,1);
                 break;
             default:
                 /*if (!apds.readProximity(proximity_data)) {
