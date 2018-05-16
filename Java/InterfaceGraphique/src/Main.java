@@ -17,12 +17,15 @@ import objects.time.Date;
 import objects.abstracts.SetOfObjects;
 import objects.vumetre.Needle;
 import objects.vumetre.Vertical;
+import serie.Serial;
 import utils.Colors;
 
 import java.awt.*;
 import java.util.List;
 
 public class Main extends Application {
+
+    final boolean usingSerie = true;
 
     /**Sert juste à lancer JavaFX
      */
@@ -38,6 +41,7 @@ public class Main extends Application {
         GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
         double width = gd.getDisplayMode().getWidth()/1.6;
         double height = gd.getDisplayMode().getHeight()/1.2;
+
         //On définit la taille du canvas qui va accueillir les images
         double xCanvasSize = width;
         double yCanvasSize = height;
@@ -68,8 +72,19 @@ public class Main extends Application {
         //On définit un set d'objets
         SetOfObjects setOfObjects = new SetOfObjects(canvas);
 
-
-
+        Serial serial;
+        Thread reader;
+        if (usingSerie) {
+            //On définit tout ce qui est nécessaire pour le port série
+            serial = new Serial();
+            reader = new Thread(new Serial.SerialReader(serial.getSerialInStream()));
+            reader.start();
+        }
+        else{
+            serial=null;
+            reader=null;
+        }
+        EventMgr eventMgr = new EventMgr(setOfObjects);
 
         //PAGE 1
         setOfObjects.appendCadrePercent(0.025,0.03,0.95, 0.94, 0.05,0.05,0); //on ajoute un cadre à ce panel
@@ -109,11 +124,11 @@ public class Main extends Application {
                 switch (code) {
                     //Flèche droite
                     case RIGHT:
-                        setOfObjects.setToSlideLeft(true);
+                        eventMgr.manage("LEFT");
                         break;
                     //Flèche gauche
                     case LEFT:
-                        setOfObjects.setToSlideRight(true);
+                        eventMgr.manage("RIGHT");
                         break;
                     //Flèche haut
                     case UP:
@@ -123,7 +138,12 @@ public class Main extends Application {
                         break;
                     //Echap
                     case ESCAPE:
-                        stage.close();
+                        if (usingSerie) {
+                            shutdown(stage, serial, reader);
+                        }
+                        else{
+                            shutdown(stage);
+                        }
                         break;
                     default:
                 }
@@ -137,13 +157,45 @@ public class Main extends Application {
         AnimationTimer timer = new AnimationTimer() {
             @Override
             public void handle(long now) {
+                if (usingSerie) {
+                    serial.resetMessage();
+                    String message = serial.readMessage();
+                    if (message != null) {
+                        eventMgr.manage(message);
+                    }
+                }
                 gc.drawImage(fond, 0, 0); //on affiche le fond
                 setOfObjects.updateAndDisplay(); //on update tous les objets
             }
         };
         timer.start(); // on démarre le timer
 
+        if (usingSerie) {
+            stage.setOnCloseRequest(event -> shutdown(stage, serial, reader));
+        }
+        else {
+            stage.setOnCloseRequest(event -> shutdown(stage));
+        }
+
         stage.show(); //on affiche la scène, qui sera refresh par le timer du type AnimationTimer
+    }
+
+
+    private void shutdown(Stage stage, Serial serial, Thread reader){
+        stage.close();
+        serial.flag = true;
+        serial.disconnect();
+        try {
+            reader.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        System.out.println("Fin de la fenêtre");
+    }
+
+    private void shutdown(Stage stage){
+        stage.close();
+        System.out.println("Fin de la fenêtre");
     }
 
 }
