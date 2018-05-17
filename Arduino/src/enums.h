@@ -32,12 +32,10 @@ enum sides {
  * Up : 0b10    Down : 0b11
  *
  * Pour concaténer, on va simplement décaler de deux bits vers la gauche l'ID de la première direction:
- *
- * Up : 0b1000  Down : 0b11
+ * Up : 0b1000  Down : 0b0011
  *
  * Puis les additionner et rajouter le bit de composition:
- *
- * Up-Down : 0b1011 + 0b10000
+ * Up-Down : 0b01011 + 0b10000
  * Up-Down : 0b11011
  *
  * En pratique, on ajoute directement 0b100 à la première direction.
@@ -67,7 +65,7 @@ enum directions{
     DIR_RIGHT_DOWN      = 4*(0b100+DIR_RIGHT)+DIR_DOWN,
     DIR_RIGHT_LEFT      = 4*(0b100+DIR_RIGHT)+DIR_LEFT,
 
-    DIR_NONE            = 0b100000,
+    DIR_NONE            = 0b100000, // N'est pas zéro pour faciliter les calculs avec les ID
 
     DIR_NEAR,
     DIR_FAR,
