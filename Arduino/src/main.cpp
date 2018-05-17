@@ -1,12 +1,17 @@
 #include <Arduino.h>
 
-#define DEBUG false
-
 #include "MIDI/MIDI.h"
+
 #include "SparkFun_APDS9960.h"
 #include "Movement.h"
-
 #include <queue>
+
+#undef DEBUG
+#define DEBUG false
+
+#if DEBUG
+#include <Metro.h>
+#endif
 
 // Pins
 #define LEFT_GESTURE_PIN    24
@@ -107,6 +112,24 @@ void loop() {
     static long lastGestureTime = -1000;
     static Movement lastMovement = Movement();
 
+#if DEBUG
+    static Metro interuptCheck = Metro(1000);
+    static long lastLastGestureTime = -1000;
+    if(lastLastGestureTime != lastGestureTime)
+    {
+        Serial.println(lastGestureTime);
+        lastLastGestureTime = lastGestureTime;
+    }
+    if(interuptCheck.check())
+    {
+        Serial.println("===============");
+        Serial.print(digitalRead(LEFT_GESTURE_PIN));
+        Serial.print(" - ");
+        Serial.println(digitalRead(RIGHT_GESTURE_PIN));
+        Serial.println("===============");
+    }
+#endif
+
     if(!runningNotes.empty())
     {
         if(millis() - runningNotes.front().second >= noteFadeTime)
@@ -132,7 +155,6 @@ void loop() {
         digitalWrite(LED_BUILTIN,HIGH);
         if(leftGestureFlag)
         {
-            detachInterrupt(LEFT_GESTURE_PIN);
             results = handleGesture(leftGestureSensor);
 
             if(results)
@@ -153,12 +175,14 @@ void loop() {
                 }
             }
 
-            leftGestureFlag = 0;
-            attachInterrupt(LEFT_GESTURE_PIN,leftGestureDetection,FALLING);
+            if(digitalRead(LEFT_GESTURE_PIN) == HIGH)
+            {
+                leftGestureFlag = 0;
+            }
         }
+
         if(rightGestureFlag)
         {
-            detachInterrupt(RIGHT_GESTURE_PIN);
             results = handleGesture(rightGestureSensor);
 
             if(results)
@@ -179,9 +203,12 @@ void loop() {
                 }
             }
 
-            rightGestureFlag = 0;
-            attachInterrupt(RIGHT_GESTURE_PIN,rightGestureDetection,FALLING);
+            if(digitalRead(RIGHT_GESTURE_PIN) == HIGH)
+            {
+                rightGestureFlag = 0;
+            }
         }
+
         digitalWrite(LED_BUILTIN,LOW);
     }
 }

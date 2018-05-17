@@ -18,6 +18,8 @@
 #include <i2c_t3.h>
 #include "enums.h"
 
+#define DEBUG false
+
 /* APDS-9960 I2C address */
 #define APDS9960_I2C_ADDR       0x39
 

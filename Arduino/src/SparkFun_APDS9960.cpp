@@ -618,7 +618,10 @@ int SparkFun_APDS9960::readGesture()
             resetGestureParameters();
             return motion;
         }
-//        Serial.println("Loop end");
+#if DEBUG
+        Serial.println("Loop end");
+        Serial.println("========");
+#endif
     }
 }
 
