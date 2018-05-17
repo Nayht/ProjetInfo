@@ -13,7 +13,6 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
-import objects.EventMgr;
 import objects.time.Calendar;
 import objects.time.Clock;
 import objects.time.Date;

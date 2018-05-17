@@ -25,7 +25,7 @@ import java.util.List;
 
 public class Main extends Application {
 
-    final boolean usingSerie = true;
+    final private boolean usingSerie = true;
 
     /**Sert juste à lancer JavaFX
      */
@@ -138,12 +138,7 @@ public class Main extends Application {
                         break;
                     //Echap
                     case ESCAPE:
-                        if (usingSerie) {
-                            shutdown(stage, serial, reader);
-                        }
-                        else{
-                            shutdown(stage);
-                        }
+                        shutdown(stage, serial, reader);
                         break;
                     default:
                 }
@@ -157,45 +152,35 @@ public class Main extends Application {
         AnimationTimer timer = new AnimationTimer() {
             @Override
             public void handle(long now) {
-                if (usingSerie) {
-                    serial.resetMessage();
+                gc.drawImage(fond, 0, 0); //on affiche le fond
+                setOfObjects.updateAndDisplay(); //on update tous les objets
+                if (usingSerie){
                     String message = serial.readMessage();
                     if (message != null) {
                         eventMgr.manage(message);
+                        serial.resetMessage();
                     }
                 }
-                gc.drawImage(fond, 0, 0); //on affiche le fond
-                setOfObjects.updateAndDisplay(); //on update tous les objets
             }
         };
         timer.start(); // on démarre le timer
 
-        if (usingSerie) {
-            stage.setOnCloseRequest(event -> shutdown(stage, serial, reader));
-        }
-        else {
-            stage.setOnCloseRequest(event -> shutdown(stage));
-        }
-
+        stage.setOnCloseRequest(event -> shutdown(stage, serial, reader));
         stage.show(); //on affiche la scène, qui sera refresh par le timer du type AnimationTimer
     }
 
 
     private void shutdown(Stage stage, Serial serial, Thread reader){
         stage.close();
-        serial.flag = true;
-        serial.disconnect();
-        try {
-            reader.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        if (serial!=null) {
+            serial.flag = true;
+            serial.disconnect();
+            try {
+                reader.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
         System.out.println("Fin de la fenêtre");
     }
-
-    private void shutdown(Stage stage){
-        stage.close();
-        System.out.println("Fin de la fenêtre");
-    }
-
 }
