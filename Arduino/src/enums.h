@@ -7,6 +7,11 @@
 
 #include <map>
 
+
+/**
+ * Les côtés Left et Right ont des ID uniques, qui permettent de construire les IDs des côtés de mouvements
+ * composites. Un bit est ajouté en première position pour indiquer qu'on a un mouvement double.
+ */
 enum sides {
     LEFT        = 0b010,
     RIGHT       = 0b100,
@@ -16,6 +21,27 @@ enum sides {
     NONE        = 0b0
 };
 
+/**
+ * Les mouvements élémentaires (Up,Down,Left,Right) ont chacun un ID unique sur 2 bits.
+ * Les IDs des mouvements composites sont obtenus par concaténation des IDs des deux mouvements
+ * qui le composent et l'ajout d'un 5ème bit qui indique la nature composée du mouvement.
+ *
+ * Exemple: le mouvement Up-Down
+ *
+ * On a d'une part l'ID de Up et d'autre celui de Down
+ * Up : 0b10    Down : 0b11
+ *
+ * Pour concaténer, on va simplement décaler de deux bits vers la gauche l'ID de la première direction:
+ *
+ * Up : 0b1000  Down : 0b11
+ *
+ * Puis les additionner et rajouter le bit de composition:
+ *
+ * Up-Down : 0b1011 + 0b10000
+ * Up-Down : 0b11011
+ *
+ * En pratique, on ajoute directement 0b100 à la première direction.
+ */
 enum directions{
     DIR_LEFT            = 0b00,
     DIR_RIGHT           = 0b01,
@@ -47,6 +73,9 @@ enum directions{
     DIR_FAR,
     DIR_ALL
 };
+
+// Les map de lookup permettent de récupérer directement le string associé à chaque partie du mouvement
+// pour toute utilisation ultérieure et entre autre envoi dans la série
 
 const std::map<sides,String> sideStringLookup {
         {LEFT,"L"},{RIGHT,"R"},

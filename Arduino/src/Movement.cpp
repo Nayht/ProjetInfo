@@ -32,6 +32,19 @@ Movement::operator bool()
 }
 
 void Movement::operator +=(Movement& operand)
+/**
+ * @brief Compose deux mouvements pour obtenir un mouvement double
+ *
+ * La logique de la composition des directions est la même que celle expliquée dans "enums.h",
+ * elle est directement appliquée aux directions des deux opérandes (this et operand) et conservée dans
+ * this.
+ * Pour le côté du mouvement, on effectue un OR bit à bit sur les deux côtés de provenance. Sur le résultat
+ * on effectue un autre OR avec le résultat du test d'égalité des deux côtés de provenance. En effet, le
+ * booléen résultant de la comparaison est par défaut à 1 si il est vrai et à 0 sinon. Ainsi on peut obtenir
+ * les valeurs définies dans "enums.h"
+ *
+ * @param operand : Mouvement avec lequel on va composer
+ */
 {
     std::pair<sides,directions> tempPair = operand.getMovement();
 

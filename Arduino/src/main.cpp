@@ -130,6 +130,12 @@ void loop() {
     }
 #endif
 
+    /**
+     * Permet de gérer l'extinction des notes qui ont été lancées
+     * A chaque passage de boucle, vérifie la note la plus ancienne
+     * Et si son temps d'existence suffisant, envoi le message
+     * d'extinction et l'enlève de la queue.
+     */
     if(!runningNotes.empty())
     {
         if(millis() - runningNotes.front().second >= noteFadeTime)
@@ -139,6 +145,10 @@ void loop() {
         }
     }
 
+    /**
+     * Si le temps depuis le dernier mouvement est suffisament grand,
+     * l'exécute en tant que mouvement simple et réinitialise le processus
+     */
     if(millis()-lastGestureTime >= doubleGestureDelayThreshold && lastMovement)
     {
         // Execute le code correspondant à lastMovement
@@ -149,39 +159,39 @@ void loop() {
         lastGestureTime = millis();
     }
 
-    if(leftGestureFlag || rightGestureFlag)
+    if(leftGestureFlag || rightGestureFlag)             // Si un mouvement est disponnible à lire
     {
         Movement results;
         digitalWrite(LED_BUILTIN,HIGH);
         if(leftGestureFlag)
         {
-            results = handleGesture(leftGestureSensor);
+            results = handleGesture(leftGestureSensor); // On le récupère
 
-            if(results)
+            if(results)                                 // Si ce n'est pas le mouvement nul
             {
                 if (millis() - lastGestureTime >= doubleGestureDelayThreshold || !lastMovement)
                 {
-                    lastGestureTime = millis();
-                    lastMovement = results;
+                    lastGestureTime = millis();         // Si on a dépassé le temps d'attente ou que le mouvement
+                    lastMovement = results;             // Précédent était nul, on réactualise
                 }
                 else if(millis()-lastGestureTime <= doubleGestureDelayThreshold)
                 {
-                    lastMovement += results;
+                    lastMovement += results;            // Sinon, on combine les mouvements
 
-                    executeGestureAction(lastMovement);
+                    executeGestureAction(lastMovement); // Et on exécute le mouvement combiné
 
                     lastMovement = Movement();
                     lastGestureTime = millis();
                 }
             }
 
-            if(digitalRead(LEFT_GESTURE_PIN) == HIGH)
-            {
+            if(digitalRead(LEFT_GESTURE_PIN) == HIGH)   // Si le capteur a relâché la pin d'interruption
+            {                                           // On a plus rien à lire, donc on remet le flag à 0
                 leftGestureFlag = 0;
             }
         }
 
-        if(rightGestureFlag)
+        if(rightGestureFlag)                            // De même, pour le capteur de droite
         {
             results = handleGesture(rightGestureSensor);
 
@@ -223,12 +233,24 @@ void rightGestureDetection() {
 
 // Foutre tout ce qui concerne ce bordel dans une autre classe propre
 
-Movement handleGesture(SparkFun_APDS9960 sensor) {
+Movement handleGesture(SparkFun_APDS9960 sensor)
+/**
+ * @brief Récupération de mouvement du capteur
+ *
+ * Gère la récupération de l'info de direction du capteur, et la combine
+ * a l'information de position du capteur. Elle permet de retourner un
+ * mouvement complet (côté+direction), soit le mouvement nul si aucun
+ * mouvement valide ne peut être récupéré.
+ *
+ * @param sensor : Capteur dont on récupère les données
+ * @return Mouvement complet si il est valide, mouvement nul sinon
+ */
+{
 #if DEBUG
     Serial.println("Handle");
 #endif
     sides side;
-    if(sensor.getPrefix() == "Left: ")
+    if(sensor.getPrefix() == "Left: ")                  // Assigne le côté du capteur au mouvement
     {
         side = LEFT;
     }
@@ -245,9 +267,9 @@ Movement handleGesture(SparkFun_APDS9960 sensor) {
 #if DEBUG
         Serial.println("Available");
 #endif
-        switch (sensor.readGesture()) {
+        switch (sensor.readGesture()) {                 // Lit le mouvement reconnu par le capteur
             case DIR_UP:
-                return(Movement(side,DIR_UP));
+                return(Movement(side,DIR_UP));          // Si il est valide, retourne un mouvement complet
 
             case DIR_DOWN:
                 return(Movement(side,DIR_DOWN));
@@ -270,10 +292,22 @@ Movement handleGesture(SparkFun_APDS9960 sensor) {
                 delay(10);
         }
     }
-    return(Movement());
+    return(Movement());                                 // Sinon, retourne le mouvement nul
 }
 
 void executeGestureAction(Movement& movement)
+/**
+ * @brief Réalise les actions serial/MIDI correspondantes au mouvement
+ *
+ * Récupère le string du mouvement passé en argument et l'envoi sur la série
+ * A partir de l'identifiant du mouvement, envoie une note MIDI d'une hauteur précise
+ * mais de vélocité et de canal prédéfini.
+ * La hauteur de la note est créée en utilisant comme point de départ l'ID du côté puis
+ * en y additionnant l'ID de la direction du mouvement.
+ * La note envoyée est ajoutée à la queue des notes en attente d'extinction.
+ *
+ * @param movement : Mouvement à exécuter
+ */
 {
     Serial.println(movement.getString());
     std::pair<sides,directions> actionPair = movement.getMovement();
