@@ -16,9 +16,7 @@
 
 #include <Arduino.h>
 #include <i2c_t3.h>
-
-/* Debug */
-#define DEBUG                   0
+#include "enums.h"
 
 /* APDS-9960 I2C address */
 #define APDS9960_I2C_ADDR       0x39
@@ -182,17 +180,6 @@
 #define DEFAULT_GCONF3          0       // All photodiodes active during gesture
 #define DEFAULT_GIEN            0       // Disable gesture interrupts
 
-/* Direction definitions */
-enum directions{
-  DIR_NONE,
-  DIR_LEFT,
-  DIR_RIGHT,
-  DIR_UP,
-  DIR_DOWN,
-  DIR_NEAR,
-  DIR_FAR,
-  DIR_ALL
-};
 
 /* State definitions */
 enum {

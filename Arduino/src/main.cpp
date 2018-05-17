@@ -1,29 +1,26 @@
 #include <Arduino.h>
-#include "MIDI/MIDI.h"
 
+#define DEBUG false
+
+#include "MIDI/MIDI.h"
 #include "SparkFun_APDS9960.h"
+#include "Movement.h"
+
+#include <queue>
 
 // Pins
-#define LEFT_GESTURE_PIN    24 // Needs to be an interrupt pin
-#define RIGHT_GESTURE_PIN 25
+#define LEFT_GESTURE_PIN    24
+#define RIGHT_GESTURE_PIN   25
 
-#define doubleGestureDelayTreshold 200 //ms
-
-enum sides {
-    LEFT,
-    RIGHT,
-    NONE
-};
-
-constexpr std::pair<sides,directions> nullPair = std::make_pair(NONE,DIR_NONE);
+constexpr int doubleGestureDelayThreshold = 200;    // ms
+constexpr int noteFadeTime = 1000;                  // ms
 
 
 void leftGestureDetection();
 void rightGestureDetection();
-std::pair<sides,directions> handleGesture(SparkFun_APDS9960);
+Movement handleGesture(SparkFun_APDS9960);
+void executeGestureAction(Movement&);
 void cancerMIDI();
-
-// Constants
 
 // Global Variables
 SparkFun_APDS9960 leftGestureSensor = SparkFun_APDS9960("Left: ");
@@ -32,6 +29,7 @@ SparkFun_APDS9960 rightGestureSensor = SparkFun_APDS9960("Right: ");
 int leftGestureFlag = 0;
 int rightGestureFlag = 0;
 uint8_t proximity_data = 0;
+std::queue<std::pair<uint8_t,int>> runningNotes;
 
 MIDI_CREATE_DEFAULT_INSTANCE();
 
@@ -107,75 +105,50 @@ void setup() {
 void loop() {
 
     static long lastGestureTime = -1000;
-    static std::pair<sides,directions> lastPair = std::make_pair(NONE,DIR_NONE);
+    static Movement lastMovement = Movement();
 
-    if(millis()-lastGestureTime >= doubleGestureDelayTreshold && lastPair != nullPair)
+    if(!runningNotes.empty())
     {
-        // Execute le code correspondant à lastPair
-        // Faire une classe magique ou whatever
-
-        switch (lastPair.second) {
-            case DIR_UP:
-                Serial.print(lastPair.first);
-                Serial.println("UP");
-                break;
-            case DIR_DOWN:
-                Serial.print(lastPair.first);
-                Serial.println("DOWN");
-                break;
-            case DIR_LEFT:
-                Serial.print(lastPair.first);
-                Serial.println("LEFT");
-                break;
-            case DIR_RIGHT:
-                Serial.print(lastPair.first);
-                Serial.println("RIGHT");
-                break;
-            default:
-                Serial.println("Defaut becuz");
+        if(millis() - runningNotes.front().second >= noteFadeTime)
+        {
+            usbMIDI.sendNoteOff(runningNotes.front().first,64,0);
+            runningNotes.pop();
         }
+    }
 
+    if(millis()-lastGestureTime >= doubleGestureDelayThreshold && lastMovement)
+    {
+        // Execute le code correspondant à lastMovement
+
+        executeGestureAction(lastMovement);
+
+        lastMovement = Movement();
         lastGestureTime = millis();
-        lastPair = nullPair;
     }
 
     if(leftGestureFlag || rightGestureFlag)
     {
-        std::pair<sides,directions> results;
+        Movement results;
         digitalWrite(LED_BUILTIN,HIGH);
         if(leftGestureFlag)
         {
             detachInterrupt(LEFT_GESTURE_PIN);
             results = handleGesture(leftGestureSensor);
 
-            if(results != nullPair)
+            if(results)
             {
-                if (millis() - lastGestureTime >= doubleGestureDelayTreshold || lastPair == nullPair)
+                if (millis() - lastGestureTime >= doubleGestureDelayThreshold || !lastMovement)
                 {
                     lastGestureTime = millis();
-                    lastPair = results;
+                    lastMovement = results;
                 }
-                else if(millis()-lastGestureTime <= doubleGestureDelayTreshold)
+                else if(millis()-lastGestureTime <= doubleGestureDelayThreshold)
                 {
-                    // Execute la partie relative au COCOCOCOCOCOOOOOMBO
-                    if(lastPair.second == DIR_UP && results.second == DIR_UP)
-                    {
-                        Serial.println("Up-Up");
-                    }
-                    else if(lastPair.second == DIR_DOWN && results.second == DIR_DOWN)
-                    {
-                        Serial.println("Down-Down");
-                    }
-                    else if(lastPair.second == DIR_LEFT && results.second == DIR_LEFT)
-                    {
-                        Serial.println("Left-Left");
-                    }
-                    else if(lastPair.second == DIR_RIGHT && results.second == DIR_RIGHT)
-                    {
-                        Serial.println("Right-Right");
-                    }
+                    lastMovement += results;
 
-                    lastPair = nullPair;
+                    executeGestureAction(lastMovement);
+
+                    lastMovement = Movement();
                     lastGestureTime = millis();
                 }
             }
@@ -188,34 +161,20 @@ void loop() {
             detachInterrupt(RIGHT_GESTURE_PIN);
             results = handleGesture(rightGestureSensor);
 
-            if(results != nullPair)
+            if(results)
             {
-                if (millis() - lastGestureTime >= doubleGestureDelayTreshold || lastPair == nullPair)
+                if (millis() - lastGestureTime >= doubleGestureDelayThreshold || !lastMovement)
                 {
                     lastGestureTime = millis();
-                    lastPair = results;
+                    lastMovement = results;
                 }
-                else if(millis()-lastGestureTime <= doubleGestureDelayTreshold)
+                else if(millis()-lastGestureTime <= doubleGestureDelayThreshold)
                 {
-                    // Execute la partie relative au COCOCOCOCOCOOOOOMBO
-                    if(lastPair.second == DIR_UP && results.second == DIR_UP)
-                    {
-                        Serial.println("Up-Up");
-                    }
-                    else if(lastPair.second == DIR_DOWN && results.second == DIR_DOWN)
-                    {
-                        Serial.println("Down-Down");
-                    }
-                    else if(lastPair.second == DIR_LEFT && results.second == DIR_LEFT)
-                    {
-                        Serial.println("Left-Left");
-                    }
-                    else if(lastPair.second == DIR_RIGHT && results.second == DIR_RIGHT)
-                    {
-                        Serial.println("Right-Right");
-                    }
+                    lastMovement += results;
 
-                    lastPair = nullPair;
+                    executeGestureAction(lastMovement);
+
+                    lastMovement = Movement();
                     lastGestureTime = millis();
                 }
             }
@@ -237,8 +196,10 @@ void rightGestureDetection() {
 
 // Foutre tout ce qui concerne ce bordel dans une autre classe propre
 
-std::pair<sides,directions> handleGesture(SparkFun_APDS9960 sensor) {
-//    Serial.println("Handle");
+Movement handleGesture(SparkFun_APDS9960 sensor) {
+#if DEBUG
+    Serial.println("Handle");
+#endif
     sides side;
     if(sensor.getPrefix() == "Left: ")
     {
@@ -254,24 +215,22 @@ std::pair<sides,directions> handleGesture(SparkFun_APDS9960 sensor) {
     }
 
     if (sensor.isGestureAvailable()) {
-//        Serial.println("Available");
+#if DEBUG
+        Serial.println("Available");
+#endif
         switch (sensor.readGesture()) {
             case DIR_UP:
-//                Serial.print(sensor.getPrefix());
-//                Serial.println("UP");
-                return(std::make_pair(side,DIR_UP));
+                return(Movement(side,DIR_UP));
+
             case DIR_DOWN:
-//                Serial.print(sensor.getPrefix());
-//                Serial.println("DOWN");
-                return(std::make_pair(side,DIR_DOWN));
+                return(Movement(side,DIR_DOWN));
+
             case DIR_LEFT:
-//                Serial.print(sensor.getPrefix());
-//                Serial.println("LEFT");
-                return(std::make_pair(side,DIR_LEFT));
+                return(Movement(side,DIR_LEFT));
+
             case DIR_RIGHT:
-//                Serial.print(sensor.getPrefix());
-//                Serial.println("RIGHT");
-                return(std::make_pair(side,DIR_RIGHT));
+                return(Movement(side,DIR_RIGHT));
+
             default:
                 /*if (!apds.readProximity(proximity_data)) {
                     Serial.println("Error reading proximity value");
@@ -284,7 +243,32 @@ std::pair<sides,directions> handleGesture(SparkFun_APDS9960 sensor) {
                 delay(10);
         }
     }
-    return(nullPair);
+    return(Movement());
+}
+
+void executeGestureAction(Movement& movement)
+{
+    Serial.println(movement.getString());
+    std::pair<sides,directions> actionPair = movement.getMovement();
+
+    uint8_t baseNote = 0;
+
+    switch (actionPair.first) {
+        case LEFT:
+            baseNote = 20;
+            break;
+        case RIGHT:
+            baseNote = 90;
+            break;
+        case LEFT_RIGHT:
+            baseNote = 30;
+            break;
+        default:
+            Serial.println("Problème de côté dans le mouvement traité");
+    }
+
+    usbMIDI.sendNoteOn(baseNote+actionPair.second,64,0);
+    runningNotes.push(std::make_pair(baseNote+actionPair.second,millis()));
 }
 
 void cancerMIDI()
