@@ -1,138 +1,151 @@
 package objects.games;
 
-import com.sun.org.apache.bcel.internal.generic.NEW;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import objects.abstracts.AbstractObject;
 
 import java.util.ArrayList;
 
+
 public class Snake extends AbstractObject {
 
-    ArrayList<int[]> listCoodrs;
-    double size;
-    double tileSize;
-    int nbTilePerSide;
-    int refreshInterval;
-    long lastUpdateTimeStamp;
-    int[] foodPosition;
-    boolean hasEatenSomething;
+    ArrayList<int[]> coordsList=new ArrayList<>();
     String direction;
     String newDirection;
+    private double size;
+    private double tileSize;
+    private long lastUpdateTimeStamp;
+    private int updateInterval;
+    private int nbTilePerSide;
+    private double squareSideLength;
+    private boolean hasEatenSomething;
+    private int[] foodPosition;
 
     public Snake(int x, int y, GraphicsContext gc){
-        this(x,y,gc,20);
+        this(x,y,gc, 20);
     }
 
-    public Snake(int x, int y, GraphicsContext gc, double size){
-        super (x,y,gc);
+    public Snake(int x, int y, GraphicsContext gc, double size) {
+        super(x,y,gc);
         this.size=size;
-        this.refreshInterval=200;
+        this.updateInterval=200;
+        this.nbTilePerSide=20;
+        this.squareSideLength=20*this.size;
+        this.tileSize=this.squareSideLength/(this.nbTilePerSide+1);
         setUp();
     }
 
-
     private void setUp(){
+        this.lastUpdateTimeStamp =System.currentTimeMillis();
+        this.coordsList=new ArrayList<>();
+        this.coordsList.add(new int[]{2,5});
+        this.coordsList.add(new int[]{3,5});
+        this.coordsList.add(new int[]{4,5});
+        this.coordsList.add(new int[]{5,5});
+        this.coordsList.add(new int[]{6,5});
+        this.coordsList.add(new int[]{7,5});
+        this.coordsList.add(new int[]{8,5});
+        this.coordsList.add(new int[]{9,5});
+        this.coordsList.add(new int[]{10,5});
+        this.coordsList.add(new int[]{11,5});
+        this.coordsList.add(new int[]{12,5});
+        generateFoodPosition();
         this.direction="right";
         this.newDirection="right";
-        this.lastUpdateTimeStamp=System.currentTimeMillis();
-        this.listCoodrs=new ArrayList<>();
-        this.listCoodrs.add(new int[]{2,2});
-        this.listCoodrs.add(new int[]{3,2});
-        this.listCoodrs.add(new int[]{4,2});
-        this.listCoodrs.add(new int[]{5,2});
-        this.listCoodrs.add(new int[]{6,2});
-        this.listCoodrs.add(new int[]{7,2});
-        generateFoodPosition();
         this.hasEatenSomething=false;
     }
 
+    @Override
+    public void display() {
+        gc.strokeRoundRect(this.x,this.y,this.squareSideLength,this.squareSideLength,20,20);
+        gc.setFill(Color.RED);
+        gc.fillRect(this.x+this.foodPosition[0]*this.tileSize,this.y+this.foodPosition[1]*this.tileSize,this.tileSize,this.tileSize);
+        gc.setFill(Color.WHITE);
+        for (int[] tile : this.coordsList){
+            gc.fillRect(this.x+tile[0]*this.tileSize,this.y+tile[1]*this.tileSize,this.tileSize,this.tileSize);
+        }
+    }
 
-    private void generateFoodPosition(){
-        boolean isFoodPositionInSnake=true;
-        this.foodPosition=new int[2];
-        while (isFoodPositionInSnake){
-            this.foodPosition[0]=(int)(Math.round((Math.random()*this.nbTilePerSide)));
-            this.foodPosition[1]=(int)(Math.round((Math.random()*this.nbTilePerSide)));
-            for (int[] snakeTile : this.listCoodrs){
-                if (snakeTile[0]==foodPosition[0] && snakeTile[1]==foodPosition[1]){
-                    isFoodPositionInSnake=true;
+    @Override
+    public void updateData() {
+        if (System.currentTimeMillis()>this.lastUpdateTimeStamp+this.updateInterval) {
+            this.direction=this.newDirection;
+            this.lastUpdateTimeStamp=System.currentTimeMillis();
+            int[] lastStep = this.coordsList.get(this.coordsList.size() - 1);
+            int[] nextStep;
+            if (direction.equals("right")) {
+                nextStep = new int[]{lastStep[0] + 1, lastStep[1]};
+                if (lastStep[0]==this.nbTilePerSide){
+                    nextStep[0]=0;
                 }
+                moveSnake(nextStep);
+            } else if (direction.equals("left")) {
+                nextStep = new int[]{lastStep[0] - 1, lastStep[1]};
+                if (lastStep[0]==0){
+                    nextStep[0]=this.nbTilePerSide;
+                }
+                moveSnake(nextStep);
+            } else if (direction.equals("up")) {
+                nextStep = new int[]{lastStep[0], lastStep[1] - 1};
+                if (lastStep[1]==0){
+                    nextStep[1]=this.nbTilePerSide;
+                }
+                moveSnake(nextStep);
+            } else if (direction.equals("down")) {
+                nextStep = new int[]{lastStep[0], lastStep[1] + 1};
+                if (lastStep[1]==this.nbTilePerSide){
+                    nextStep[1]=0;
+                }
+                moveSnake(nextStep);
             }
         }
     }
 
-    private void moveSnake(int[] nextStep){
-        if (nextStep[0]==this.foodPosition[0] && nextStep[1]==this.foodPosition[1]){
-            this.hasEatenSomething=true;
-        }
-        if (!this.hasEatenSomething){
-            for(int i=0; i<this.listCoodrs.size()-1; i++){
-                if (this.listCoodrs.get(i)[0] == nextStep[0] && this.listCoodrs.get(i)[1] == nextStep[1]){
-                    setUp();
-                    return;
+
+    private void generateFoodPosition() {
+        boolean foodPositionInSnake = true;
+        while (foodPositionInSnake) {
+            foodPositionInSnake = false;
+            this.foodPosition = new int[]{(int) Math.round(Math.random()*this.nbTilePerSide), (int) Math.round(Math.random()*this.nbTilePerSide)};
+            for (int i = 0; i < this.coordsList.size() - 1; i++) {
+                if (this.coordsList.get(i)[0] == this.foodPosition[0] && this.coordsList.get(i)[1] == this.foodPosition[1]) {
+                    foodPositionInSnake = true;
+                    break;
                 }
-                this.listCoodrs.set(i,this.listCoodrs.get(i+1));
             }
-            this.listCoodrs.set(this.listCoodrs.size()-1,nextStep);
-        }
-        else{
-            generateFoodPosition();
-            this.listCoodrs.add(nextStep);
         }
     }
 
     public void changeDirection(String newDirection){
-        if (!(this.direction.equals("right") && newDirection.equals("left"))){
-            if (!(this.direction.equals("left") && newDirection.equals("right"))){
-                if (!(this.direction.equals("up") && newDirection.equals("down"))){
-                    if (!(this.direction.equals("down") && newDirection.equals("up"))){
-                        this.newDirection=newDirection;
+        if (!(newDirection.equals("right") && this.direction.equals("left"))){
+            if (!(newDirection.equals("left") && this.direction.equals("right"))){
+                if (!(newDirection.equals("up") && this.direction.equals("down"))){
+                    if (!(newDirection.equals("down") && this.direction.equals("up"))){
+                        this.newDirection = newDirection;
                     }
                 }
             }
         }
     }
 
-
-    @Override
-    public void display() {
-        gc.fillRoundRect(this.x,this.y,this.size*20, this.size*20, 10,10);
-        gc.setFill(Color.RED);
-        gc.fillRect(this.x+this.foodPosition[0]*this.tileSize,this.y+this.foodPosition[1]*this.tileSize,this.tileSize, this.tileSize);
-        gc.setFill(Color.WHITE);
-        for (int[] tile : this.listCoodrs){
-            gc.fillRect(this.x+tile[0]*this.tileSize, this.y+tile[1]*this.tileSize, this.tileSize, this.tileSize);
+    private void moveSnake(int[] nextStep){
+        if (this.foodPosition[0]==nextStep[0] && this.foodPosition[1]==nextStep[1]){
+            this.hasEatenSomething=true;
         }
-    }
-
-    @Override
-    public void updateData() {
-        if (System.currentTimeMillis()>this.lastUpdateTimeStamp+this.refreshInterval) {
-            this.lastUpdateTimeStamp=System.currentTimeMillis();
-            int[] nextStep = this.listCoodrs.get(this.listCoodrs.size() - 1);
-            if (this.direction.equals("right")) {
-                nextStep[0] += 1;
-                if (nextStep[0] > this.nbTilePerSide) {
-                    nextStep[0] = 0;
+        if (!hasEatenSomething) {
+            for (int i = 0; i < this.coordsList.size() - 1; i++) {
+                if (this.coordsList.get(i)[0]==nextStep[0] && this.coordsList.get(i)[1]==nextStep[1]){
+                    setUp();
+                    return;
                 }
-            } else if (this.direction.equals("left")) {
-                nextStep[0] -= 1;
-                if (nextStep[0] < 0) {
-                    nextStep[0] = this.nbTilePerSide;
-                }
-            } else if (this.direction.equals("up")) {
-                nextStep[1] -= 1;
-                if (nextStep[1] < 0) {
-                    nextStep[1] = this.nbTilePerSide;
-                }
-            } else if (this.direction.equals("down")) {
-                nextStep[1] += 1;
-                if (nextStep[1] > this.nbTilePerSide) {
-                    nextStep[1] = 0;
-                }
+                this.coordsList.set(i, this.coordsList.get(i+1));
             }
-            moveSnake(nextStep);
+            this.coordsList.set(this.coordsList.size() - 1, nextStep);
+        }
+        else{
+            this.coordsList.add(nextStep);
+            generateFoodPosition();
+            this.hasEatenSomething=false;
         }
     }
 }
