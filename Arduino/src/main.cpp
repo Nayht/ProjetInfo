@@ -12,7 +12,7 @@
 #define LEFT_GESTURE_PIN    24
 #define RIGHT_GESTURE_PIN   25
 
-constexpr int doubleGestureDelayThreshold = 200;    // ms
+constexpr int doubleGestureDelayThreshold = 300;    // ms
 constexpr int noteFadeTime = 1000;                  // ms
 
 
@@ -260,8 +260,14 @@ void executeGestureAction(Movement& movement)
         case RIGHT:
             baseNote = 90;
             break;
+        case LEFT_LEFT:
+            baseNote = 13;
+            break;
         case LEFT_RIGHT:
             baseNote = 30;
+            break;
+        case RIGHT_RIGHT:
+            baseNote = 47;
             break;
         default:
             Serial.println("Problème de côté dans le mouvement traité");
