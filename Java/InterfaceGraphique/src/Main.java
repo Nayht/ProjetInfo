@@ -11,6 +11,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
+import objects.games.Snake;
 import objects.time.Calendar;
 import objects.time.Clock;
 import objects.time.Date;
@@ -25,7 +26,7 @@ import java.util.List;
 
 public class Main extends Application {
 
-    final private boolean usingSerie = true;
+    final private boolean usingSerie = false;
 
     /**Sert juste à lancer JavaFX
      */
@@ -110,6 +111,8 @@ public class Main extends Application {
         //PAGE 5
         setOfObjects.addPanel();
         setOfObjects.appendCadrePercent(0.025,0.03,0.95, 0.94, 0.05,0.05,4);
+        Snake snake = new Snake(0,0,gc,30);
+        setOfObjects.appendObjectPercent(snake,0.05,0.1,4);
 
         //PAGE 6
         setOfObjects.addPanel();
@@ -135,6 +138,18 @@ public class Main extends Application {
                         break;
                     //Flèche bas
                     case DOWN:
+                        break;
+                    case Z:
+                        snake.changeDirection("up");
+                        break;
+                    case Q:
+                        snake.changeDirection("left");
+                        break;
+                    case S:
+                        snake.changeDirection("down");
+                        break;
+                    case D:
+                        snake.changeDirection("right");
                         break;
                     //Echap
                     case ESCAPE:
