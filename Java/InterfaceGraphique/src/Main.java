@@ -111,7 +111,7 @@ public class Main extends Application {
         //PAGE 5
         setOfObjects.addPanel();
         setOfObjects.appendCadrePercent(0.025,0.03,0.95, 0.94, 0.05,0.05,4);
-        Snake snake = new Snake(0,0,gc,30);
+        Snake snake = new Snake(0,0,gc);
         setOfObjects.appendObjectPercent(snake,0.05,0.1,4);
 
         //PAGE 6

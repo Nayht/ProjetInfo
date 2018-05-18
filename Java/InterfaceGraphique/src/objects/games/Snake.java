@@ -22,7 +22,7 @@ public class Snake extends AbstractObject {
     private int[] foodPosition;
 
     public Snake(int x, int y, GraphicsContext gc){
-        this(x,y,gc, 20);
+        this(x,y,gc, gc.getCanvas().getWidth()*0.025);
     }
 
     public Snake(int x, int y, GraphicsContext gc, double size) {
