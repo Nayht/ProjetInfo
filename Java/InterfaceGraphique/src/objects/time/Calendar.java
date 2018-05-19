@@ -13,7 +13,6 @@ public class Calendar extends AbstractObject{
 
     private double size;
     private double textSize;
-    private Date date;
     private TextObject[] labels;
     private String familyFont;
     private FontWeight fontWeight;
@@ -22,11 +21,11 @@ public class Calendar extends AbstractObject{
     private int lineHeight;
 
     public Calendar(double x, double y, GraphicsContext gc){
-        this(x,y,gc,2);
+        this(x,y,gc,gc.getCanvas().getWidth()*0.0015);
     }
 
     public Calendar(double x, double y, GraphicsContext gc, double size){
-        this(x,y,gc,size,"Arial",FontWeight.SEMI_BOLD);
+        this(x,y,gc,size,"Helvetica",FontWeight.SEMI_BOLD);
     }
 
     public Calendar(double x, double y, GraphicsContext gc, double size, String familyFont, FontWeight fontWeight){
@@ -168,5 +167,17 @@ public class Calendar extends AbstractObject{
 
     @Override
     public void updateData() {
+    }
+
+    @Override
+    public void setX(double x){
+        double xDiff=x-this.x;
+        this.move(xDiff,0);
+    }
+
+    @Override
+    public void setY(double y){
+        double yDiff=y-this.y;
+        this.move(0,yDiff);
     }
 }

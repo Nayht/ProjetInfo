@@ -11,13 +11,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
-import objects.games.Snake;
-import objects.time.Calendar;
-import objects.time.Clock;
-import objects.time.Date;
 import objects.abstracts.SetOfObjects;
-import objects.vumetre.Needle;
-import objects.vumetre.Vertical;
 import serie.Serial;
 import utils.Colors;
 

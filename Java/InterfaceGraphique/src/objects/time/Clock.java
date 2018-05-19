@@ -1,6 +1,5 @@
 package objects.time;
 
-import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.text.FontWeight;
 import objects.abstracts.TextObject;
@@ -19,7 +18,7 @@ public class Clock extends TextObject {
      * @param gc contexte graphique
      */
     public Clock(double x, double y, GraphicsContext gc){
-        this(x,y,gc, "Arial", FontWeight.SEMI_BOLD, gc.getCanvas().getWidth()*0.04);
+        this(x,y,gc, "Helvetica", FontWeight.SEMI_BOLD, gc.getCanvas().getWidth()*0.025);
     }
     /** Crée une horloge, avec une police personnalisée
      * @param x coordonnée x

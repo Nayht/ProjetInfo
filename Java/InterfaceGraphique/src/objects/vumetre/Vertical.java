@@ -23,6 +23,10 @@ public class Vertical extends AbstractObject {
         this(x, y, gc, transparency,gc.getCanvas().getWidth()*0.05,gc.getCanvas().getHeight()*0.70, sens);
     }
 
+    public Vertical (double x, double y, GraphicsContext gc, String sens){
+        this(x, y, gc, 1,gc.getCanvas().getWidth()*0.05,gc.getCanvas().getHeight()*0.70, sens);
+    }
+
     public Vertical (double x, double y, GraphicsContext gc, double transparency, double width, double height){
         this(x, y, gc, transparency, width, height, "down");
     }
