@@ -18,7 +18,7 @@ public class Date extends TextObject {
      * @param gc contexte graphique
      */
     public Date(double x, double y, GraphicsContext gc){
-        this(x,y,gc, "Arial", FontWeight.SEMI_BOLD, 48);
+        this(x,y,gc, "Helvetica", FontWeight.SEMI_BOLD, gc.getCanvas().getWidth()*0.025);
     }
     /** Crée une horloge, avec une police personnalisée
      * @param x coordonnée x

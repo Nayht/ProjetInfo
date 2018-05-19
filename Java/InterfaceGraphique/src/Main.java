@@ -26,7 +26,7 @@ import java.util.List;
 
 public class Main extends Application {
 
-    final private boolean usingSerie = false;
+    final private boolean usingSerie = true;
 
     /**Sert juste à lancer JavaFX
      */
@@ -85,38 +85,8 @@ public class Main extends Application {
             serial=null;
             reader=null;
         }
-        EventMgr eventMgr = new EventMgr(setOfObjects);
+        EventMgr eventMgr = new EventMgr(gc, setOfObjects);
 
-        //PAGE 1
-        setOfObjects.appendCadrePercent(0.025,0.03,0.95, 0.94, 0.05,0.05,0); //on ajoute un cadre à ce panel
-        setOfObjects.appendObjectPercent(new Clock(0,0, gc, "Helvetica",FontWeight.SEMI_BOLD,width*0.025), 0.05, 0.08, 0); //on ajoute une horloge au premier panel
-        setOfObjects.appendObjectPercent(new Date(0,0, gc, "Helvetica",FontWeight.SEMI_BOLD,width*0.025), 0.80, 0.08, 0); //on ajoute une horloge au premier panel
-        setOfObjects.appendObjectPercent(new Calendar(0.05*width,0.1*height, gc,width*0.0015), 0.05, 0.1,0); //on ajoute une horloge au premier panel
-
-        //PAGE 2
-        setOfObjects.addPanel(); //on ajoute un panel
-        setOfObjects.appendCadrePercent(0.025,0.03,0.95, 0.94, 0.05,0.05,1);
-        setOfObjects.appendObjectPercent(new Clock(0,0,gc), 0.43,0.50,1); //on ajoute un objet à ce panel
-
-        //PAGE 3
-        setOfObjects.addPanel();
-        setOfObjects.appendCadrePercent(0.025,0.03,0.95, 0.94, 0.05,0.05,2);
-        setOfObjects.appendObjectPercent(new Needle(0,0,gc,0.3,0,10,100), 0.5,0.5,2);
-
-        //PAGE 4
-        setOfObjects.addPanel();
-        setOfObjects.appendCadrePercent(0.025,0.03,0.95, 0.94, 0.05,0.05,3);
-        setOfObjects.appendObjectPercent(new Vertical(0,0,gc,1,"up"),0.05,0.1,3);
-
-        //PAGE 5
-        setOfObjects.addPanel();
-        setOfObjects.appendCadrePercent(0.025,0.03,0.95, 0.94, 0.05,0.05,4);
-        Snake snake = new Snake(0,0,gc);
-        setOfObjects.appendObjectPercent(snake,0.05,0.1,4);
-
-        //PAGE 6
-        setOfObjects.addPanel();
-        setOfObjects.appendCadrePercent(0.025,0.03,0.95, 0.94, 0.05,0.05,5);
 
         /** On ajoute un listener de touches du clavier
          */
@@ -140,16 +110,16 @@ public class Main extends Application {
                     case DOWN:
                         break;
                     case Z:
-                        snake.changeDirection("up");
+                        eventMgr.manage("UP-SNAKE");
                         break;
                     case Q:
-                        snake.changeDirection("left");
+                        eventMgr.manage("LEFT-SNAKE");
                         break;
                     case S:
-                        snake.changeDirection("down");
+                        eventMgr.manage("DOWN-SNAKE");
                         break;
                     case D:
-                        snake.changeDirection("right");
+                        eventMgr.manage("RIGHT-SNAKE");
                         break;
                     //Echap
                     case ESCAPE:

@@ -242,4 +242,13 @@ public class SetOfObjects {
     public void setToSlideRight(boolean toSlideRight) {
         this.toSlideRight = true;
     }
+
+    /**
+     * Fonction permettant de savoir sur quel panel on est actuellement
+     * @return renvoie un int correspondant au panel (commence à 0)
+     */
+    public int getCurrentPanel(){
+        return this.currentPanel;
+    }
+
 }
