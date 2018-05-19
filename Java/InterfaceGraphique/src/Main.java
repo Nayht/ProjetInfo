@@ -15,12 +15,17 @@ import objects.abstracts.SetOfObjects;
 import serie.Serial;
 import utils.Colors;
 
+import javax.management.Attribute;
+import javax.management.AttributeList;
+import javax.management.MBeanServer;
+import javax.management.ObjectName;
 import java.awt.*;
+import java.lang.management.ManagementFactory;
 import java.util.List;
 
 public class Main extends Application {
 
-    final private boolean usingSerie = true;
+    final private boolean usingSerie = false;
 
     /**Sert juste à lancer JavaFX
      */
@@ -162,4 +167,6 @@ public class Main extends Application {
         }
         System.out.println("Fin de la fenêtre");
     }
+
+
 }

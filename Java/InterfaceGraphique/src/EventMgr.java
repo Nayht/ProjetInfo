@@ -1,44 +1,49 @@
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.text.FontWeight;
 import objects.abstracts.SetOfObjects;
+import objects.abstracts.TextObject;
 import objects.games.Snake;
 import objects.time.Calendar;
 import objects.time.Clock;
 import objects.time.Date;
 import objects.vumetre.Needle;
-import objects.vumetre.Vertical;
+import utils.CpuMonitor;
 
 public class EventMgr {
     private SetOfObjects setOfObjects;
     private GraphicsContext gc;
-    private double fenWidth;
-    private double fenHeight;
-    private int snakePanel=4;
+
+    private boolean interfaceLocked;
+
+    //Objets dynamiques
+    private int snakePanel=1;
     private Snake snake;
+    private Needle cpuLoad;
 
     public EventMgr(GraphicsContext gc, SetOfObjects setOfObjects) {
         this.gc=gc;
         this.setOfObjects = setOfObjects;
-        this.fenWidth=gc.getCanvas().getWidth();
-        this.fenHeight=gc.getCanvas().getHeight();
+        this.interfaceLocked=false;
         setUpSetOfObjects();
     }
 
+
+
     public void manage(String event) {
-        if (event.equals("LEFT")) {
-            setOfObjects.setToSlideLeft(true);
-        } else if (event.equals("RIGHT")) {
-            setOfObjects.setToSlideRight(true);
-        }
-        else if (this.setOfObjects.getCurrentPanel()==this.snakePanel) {
-            if (event.equals("RIGHT-SNAKE")) {
-                this.snake.changeDirection("right");
-            } else if (event.equals("LEFT-SNAKE")) {
-                this.snake.changeDirection("left");
-            } else if (event.equals("DOWN-SNAKE")) {
-                this.snake.changeDirection("down");
-            } else if (event.equals("UP-SNAKE")) {
-                this.snake.changeDirection("up");
+        if (!this.interfaceLocked) {
+            if (event.equals("LEFT")) {
+                this.setOfObjects.setToSlideLeft(true);
+            } else if (event.equals("RIGHT")) {
+                this.setOfObjects.setToSlideRight(true);
+            } else if (this.setOfObjects.getCurrentPanel() == this.snakePanel) {
+                if (event.equals("RIGHT-SNAKE")) {
+                    this.snake.changeDirection("right");
+                } else if (event.equals("LEFT-SNAKE")) {
+                    this.snake.changeDirection("left");
+                } else if (event.equals("DOWN-SNAKE")) {
+                    this.snake.changeDirection("down");
+                } else if (event.equals("UP-SNAKE")) {
+                    this.snake.changeDirection("up");
+                }
             }
         }
     }
@@ -46,36 +51,45 @@ public class EventMgr {
 
     private void setUpSetOfObjects(){
         //PAGE 1
-        setOfObjects.appendCadrePercent(0.025,0.03,0.95, 0.94, 0.05,0.05,0); //on ajoute un cadre à ce panel
-        setOfObjects.appendObjectPercent(new Clock(0,0, gc), 0.05, 0.08, 0); //on ajoute une horloge au premier panel
-        setOfObjects.appendObjectPercent(new Date(0,0, gc), 0.80, 0.08, 0); //on ajoute une horloge au premier panel
-        setOfObjects.appendObjectPercent(new Calendar(0,0,gc), 0.05, 0.1,0); //on ajoute une horloge au premier panel
+        this.setOfObjects.appendCadrePercent(0.025,0.03,0.95, 0.94, 0.05,0.05,0); //on ajoute un cadre à ce panel
+        this.setOfObjects.appendObjectPercent(new Clock(0,0, gc), 0.05, 0.08, 0); //on ajoute une horloge au premier panel
+        this.setOfObjects.appendObjectPercent(new Date(0,0, gc), 0.80, 0.08, 0); //on ajoute une horloge au premier panel
+        this.setOfObjects.appendObjectPercent(new Calendar(0,0,gc), 0.05, 0.1,0); //on ajoute une horloge au premier panel
 
         //PAGE 2
-        setOfObjects.addPanel(); //on ajoute un panel
-        setOfObjects.appendCadrePercent(0.025,0.03,0.95, 0.94, 0.05,0.05,1);
-        setOfObjects.appendObjectPercent(new Clock(0,0,gc), 0.43,0.50,1); //on ajoute un objet à ce panel
+        this.setOfObjects.addPanel(); //on ajoute un panel
+        this.setOfObjects.appendCadrePercent(0.025,0.03,0.95, 0.94, 0.05,0.05,1);
 
         //PAGE 3
-        setOfObjects.addPanel();
-        setOfObjects.appendCadrePercent(0.025,0.03,0.95, 0.94, 0.05,0.05,2);
-        setOfObjects.appendObjectPercent(new Needle(0,0,gc,0.3,0,10,100), 0.5,0.5,2);
-
-        //PAGE 4
-        setOfObjects.addPanel();
-        setOfObjects.appendCadrePercent(0.025,0.03,0.95, 0.94, 0.05,0.05,3);
-        setOfObjects.appendObjectPercent(new Vertical(0,0,gc,"up"),0.05,0.1,3);
-
-        //PAGE 5
-        setOfObjects.addPanel();
-        setOfObjects.appendCadrePercent(0.025,0.03,0.95, 0.94, 0.05,0.05,4);
-
-        //PAGE 6
-        setOfObjects.addPanel();
-        setOfObjects.appendCadrePercent(0.025,0.03,0.95, 0.94, 0.05,0.05,5);
+        this.setOfObjects.addPanel();
+        this.setOfObjects.appendCadrePercent(0.025,0.03,0.95, 0.94, 0.05,0.05,2);
 
         //Objets dynamiques
+        //Snake
         this.snake = new Snake(0,0,gc);
-        setOfObjects.appendObjectPercent(this.snake,0.05,0.1,this.snakePanel);
+        this.setOfObjects.appendObjectPercent(this.snake,0.05,0.1,this.snakePanel);
+
+        //Moniteur CPU
+        CpuMonitor cpuMonitor = new CpuMonitor();
+        this.cpuLoad= new Needle(0,0,gc,0.5,0,100,100){
+            private int updateNumberSinceLastUpdate=0;
+            @Override
+            public void updateData(){
+                if (this.updateNumberSinceLastUpdate>100){
+                    this.updateNumberSinceLastUpdate=0;
+                    double load = cpuMonitor.getProcessCpuLoad();
+                    if (load != Double.NaN && load != 0.0) {
+                        setValue(load);
+                    }
+                }
+                else{
+                    this.updateNumberSinceLastUpdate++;
+                }
+            }
+        };
+        this.setOfObjects.appendObjectPercent(new TextObject(0,0,gc,"CPU"),0.825,0.92,0);
+        this.setOfObjects.appendObjectPercent(this.cpuLoad,0.87,0.87,0);
     }
+
+
 }

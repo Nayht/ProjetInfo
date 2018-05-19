@@ -1,7 +1,6 @@
 package objects.time;
 
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.paint.Color;
 import javafx.scene.text.FontWeight;
 import objects.abstracts.AbstractObject;
 import objects.abstracts.TextObject;

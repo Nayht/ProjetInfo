@@ -71,16 +71,17 @@ public class Needle extends AbstractObject {
 
     @Override
     public void updateData() {
-        this.angle=(angleMax-angleMin)*value+angleMin;
+
     }
 
     @Override
     public void display(){
-        gc.setStroke(Colors.RED.getColor());
-        gc.strokeLine(this.x, this.y,this.x+Math.cos(this.angle*Math.PI/180)*this.lengthNeedle,this.y-Math.sin(this.angle*Math.PI/180)*this.lengthNeedle);
-        gc.setStroke(Colors.WHITE.getColor());
+        this.angle=(angleMax-angleMin)*value+angleMin;
         //gc.setGlobalAlpha(this.alphaValue);
         gc.fillArc(this.x-this.lengthNeedle, this.y-this.lengthNeedle, this.lengthNeedle*2, this.lengthNeedle*2, angleMin, angleMax-angleMin, ArcType.ROUND);
         //gc.setGlobalAlpha(1);
+        gc.setStroke(Colors.RED.getColor());
+        gc.strokeLine(this.x, this.y,this.x+Math.cos(this.angle*Math.PI/180)*this.lengthNeedle,this.y-Math.sin(this.angle*Math.PI/180)*this.lengthNeedle);
+        gc.setStroke(Colors.WHITE.getColor());
     }
 }

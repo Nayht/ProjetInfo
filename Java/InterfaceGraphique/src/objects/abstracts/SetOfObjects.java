@@ -26,6 +26,8 @@ public class SetOfObjects {
     private Directions longMovementDirection;
     private boolean toSlideLeft;
     private boolean toSlideRight;
+    private boolean toSlideUp;
+    private boolean toSlideDown;
 
     public SetOfObjects(Canvas canvas) {
         this.canvas = canvas;
@@ -43,6 +45,8 @@ public class SetOfObjects {
         this.inLongMovement = false;
         this.toSlideLeft=false;
         this.toSlideRight=false;
+        this.toSlideUp=false;
+        this.toSlideDown=false;
         this.gc = canvas.getGraphicsContext2D();
         this.objects = new ArrayList<AbstractObject>();
     }
@@ -129,17 +133,25 @@ public class SetOfObjects {
     /** Update uniquement les coordonnées de tous les objets du set
      */
     public void updateCoords() {
-        if (inLongMovement) {
+        if (this.inLongMovement) {
             updateSlideSpeed();
         }
         else{
-            if (toSlideRight){
-                toSlideRight=false;
+            if (this.toSlideRight){
+                this.toSlideRight=false;
                 this.slide(Directions.RIGHT);
             }
-            if (toSlideLeft){
-                toSlideLeft=false;
+            else if (this.toSlideLeft){
+                this.toSlideLeft=false;
                 this.slide(Directions.LEFT);
+            }
+            if (this.toSlideDown){
+                this.toSlideUp=false;
+                this.slide(Directions.DOWN);
+            }
+            else if (this.toSlideUp){
+                this.toSlideDown=false;
+                this.slide(Directions.UP);
             }
         }
         this.x += this.vx;
@@ -165,7 +177,7 @@ public class SetOfObjects {
         this.startX = (int) this.x;
         this.startY = (int) this.y;
         if (direction == Directions.LEFT) {
-            if (this.currentPanel<nbPanels) {
+            if (this.currentPanel<this.nbPanels) {
                 this.currentPanel+=1;
                 longMovementDirection = Directions.LEFT;
                 this.aimX -= this.canvas.getWidth();
