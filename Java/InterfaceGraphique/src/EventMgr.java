@@ -30,24 +30,28 @@ public class EventMgr {
 
     public void manage(String event) {
         if (!this.interfaceLocked) {
-            if (event.equals("LEFT")) {
-                this.setOfObjects.setToSlideLeft(true);
-            } else if (event.equals("RIGHT")) {
-                this.setOfObjects.setToSlideRight(true);
-            } else if (this.setOfObjects.getCurrentPanel() == this.snakePanel) {
-                if (event.equals("RIGHT-SNAKE")) {
-                    this.snake.changeDirection("right");
-                } else if (event.equals("LEFT-SNAKE")) {
-                    this.snake.changeDirection("left");
-                } else if (event.equals("DOWN-SNAKE")) {
-                    this.snake.changeDirection("down");
-                } else if (event.equals("UP-SNAKE")) {
-                    this.snake.changeDirection("up");
+            String[] eventSplitted = event.split(" ");
+            if (eventSplitted[0].equals("R")) {
+                if (eventSplitted[1].equals("Left")) {
+                    this.setOfObjects.setToSlideLeft(true);
+                } else if (eventSplitted[1].equals("Right")) {
+                    this.setOfObjects.setToSlideRight(true);
+                }
+            } else if (eventSplitted[0].equals("L")) {
+                if (this.setOfObjects.getCurrentPanel() == this.snakePanel) {
+                    if (eventSplitted[1].equals("Right")) {
+                        this.snake.changeDirection("right");
+                    } else if (eventSplitted[1].equals("Left")) {
+                        this.snake.changeDirection("left");
+                    } else if (eventSplitted[1].equals("Down")) {
+                        this.snake.changeDirection("down");
+                    } else if (eventSplitted[1].equals("Up")) {
+                        this.snake.changeDirection("up");
+                    }
                 }
             }
         }
     }
-
 
     private void setUpSetOfObjects(){
         //PAGE 1
@@ -76,7 +80,7 @@ public class EventMgr {
             public void updateData(){
                 double load = cpuMonitor.getCpuLoad();
                 if (load!=-1) {
-                    System.out.println(load);
+                    //System.out.println(load);
                     setValue(load);
                 }
             }

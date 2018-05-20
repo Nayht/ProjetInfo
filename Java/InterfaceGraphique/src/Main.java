@@ -25,7 +25,7 @@ import java.util.List;
 
 public class Main extends Application {
 
-    final private boolean usingSerie = false;
+    final private boolean usingSerie = true;
 
     /**Sert juste à lancer JavaFX
      */

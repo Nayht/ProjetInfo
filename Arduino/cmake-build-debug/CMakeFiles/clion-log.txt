@@ -1,7 +1,4 @@
-/home/trotfunky/Logiciels/clion-2017.2.3/bin/cmake/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" /home/trotfunky/Programmation/Git/INTech/ProjetInfo/Arduino
+/opt/JetBrains/apps/CLion/ch-0/173.4674.29/bin/cmake/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" "/home/elektron/Documents/Projet info/ProjetInfo/Arduino"
 -- Configuring done
 -- Generating done
--- Build files have been written to: /home/trotfunky/Programmation/Git/INTech/ProjetInfo/Arduino/cmake-build-debug
-
-Cannot get compiler information:
-	Unable to create temporary file
+-- Build files have been written to: /home/elektron/Documents/Projet info/ProjetInfo/Arduino/cmake-build-debug
