@@ -1,41 +1,52 @@
 package utils;
 
-import javax.management.*;
-import java.lang.management.ManagementFactory;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 
 public class CpuMonitor {
 
-    private MBeanServer mbs;
-    private ObjectName name;
+    private int nbPasses;
+    private int nbPassesBeforeUpdate;
+    private double[] splitValuesLastChecked;
+    private File file;
 
     public CpuMonitor(){
-        this.mbs = ManagementFactory.getPlatformMBeanServer();
-        try {
-            this.name = ObjectName.getInstance("java.lang:type=OperatingSystem");
-        } catch (MalformedObjectNameException e) {
-            e.printStackTrace();
-        }
+        this.nbPasses=0;
+        this.nbPassesBeforeUpdate=50;
+        this.splitValuesLastChecked=new double[20];
+        this.file=new File("/proc/stat");
     }
 
-    public double getProcessCpuLoad(){
-        AttributeList list = null;
+    public double getCpuLoad(){
+        this.nbPasses+=1;
+        BufferedReader reader;
+        String firstLine="";
         try {
-            list = this.mbs.getAttributes(this.name, new String[]{"ProcessCpuLoad"});
-        } catch (InstanceNotFoundException e) {
+            reader = new BufferedReader(new FileReader(this.file));
+            firstLine = reader.readLine();
+        } catch (Exception e){
             e.printStackTrace();
-        } catch (ReflectionException e) {
-            e.printStackTrace();
         }
+        if (this.nbPasses>this.nbPassesBeforeUpdate) {
+            String[] split = firstLine.split(" ");
 
-        if (list.isEmpty()){
-            return Double.NaN;
-        }
-        Attribute att = (Attribute)list.get(0);
-        Double value  = (Double)att.getValue();
+            double hundredPercent=0;
+            double idle=0;
+            for (int i=2; i<split.length; i++){
+                hundredPercent+=Double.parseDouble(split[i])-this.splitValuesLastChecked[i];
+                if (i==5){
+                    idle=Double.parseDouble(split[5])-this.splitValuesLastChecked[5];
+                }
+                this.splitValuesLastChecked[i]=Double.parseDouble(split[i]);
+            }
+            double cpuLoad=1-(idle/hundredPercent);
 
-        if (value == -1.0) {
-            return Double.NaN;
+            this.nbPasses=0;
+            return Math.round(cpuLoad*100);
         }
-        return ((int)(value * 1000) / 10.0);
+        else{
+            return -1;
+        }
     }
 }

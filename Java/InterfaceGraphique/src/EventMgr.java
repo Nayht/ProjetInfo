@@ -72,18 +72,12 @@ public class EventMgr {
         //Moniteur CPU
         CpuMonitor cpuMonitor = new CpuMonitor();
         this.cpuLoad= new Needle(0,0,gc,0.5,0,100,100){
-            private int updateNumberSinceLastUpdate=0;
             @Override
             public void updateData(){
-                if (this.updateNumberSinceLastUpdate>100){
-                    this.updateNumberSinceLastUpdate=0;
-                    double load = cpuMonitor.getProcessCpuLoad();
-                    if (load != Double.NaN && load != 0.0) {
-                        setValue(load);
-                    }
-                }
-                else{
-                    this.updateNumberSinceLastUpdate++;
+                double load = cpuMonitor.getCpuLoad();
+                if (load!=-1) {
+                    System.out.println(load);
+                    setValue(load);
                 }
             }
         };
