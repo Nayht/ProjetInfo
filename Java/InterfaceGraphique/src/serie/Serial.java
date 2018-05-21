@@ -18,7 +18,7 @@ public class Serial
     {
         super();
         try {
-            this.serialInStream = this.connect("/dev/ttyUSB0");
+            this.serialInStream = this.connect("/dev/ttyACM0");
         } catch (Exception e) {
             e.printStackTrace();
         }

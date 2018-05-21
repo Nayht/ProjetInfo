@@ -61,28 +61,44 @@ void setup() {
 
     // Initialize APDS-9960 (configure I2C and initial values)
     if ( leftGestureSensor.init() ) {
-        //Serial.println(F("Left sensor initialization complete"));
+#if DEBUG
+        Serial.println(F("Left sensor initialization complete"));
+#endif
     } else {
-        //Serial.println(F("Left sensor initialization failed"));
+#if DEBUG
+        Serial.println(F("Left sensor initialization failed"));
+#endif
     }
 
     if ( rightGestureSensor.init(1) ) {
-        //Serial.println(F("Right sensor initialization complete"));
+#if DEBUG
+        Serial.println(F("Right sensor initialization complete"));
+#endif
     } else {
-        //Serial.println(F("Right sensor initialization failed"));
+#if DEBUG
+        Serial.println(F("Right sensor initialization failed"));
+#endif
     }
 
     // Start running the APDS-9960 gesture sensor engine
     if ( leftGestureSensor.enableGestureSensor(true) ) {
-        //Serial.println(F("Left gesture sensor is now running"));
+#if DEBUG
+        Serial.println(F("Left gesture sensor is now running"));
+#endif
     } else {
-        //Serial.println(F("Left gesture initilization failed"));
+#if DEBUG
+        Serial.println(F("Left gesture initilization failed"));
+#endif
     }
 
     if ( rightGestureSensor.enableGestureSensor(true) ) {
-        //Serial.println(F("Right gesture sensor is now running"));
+#if DEBUG
+        Serial.println(F("Right gesture sensor is now running"));
+#endif
     } else {
-        //Serial.println(F("Right gesture initilization failed"));
+#if DEBUG
+        Serial.println(F("Right gesture initilization failed"));
+#endif
     }
 
     /*// Adjust the Proximity sensor gain
@@ -329,9 +345,11 @@ void executeGestureAction(Movement& movement)
             break;
         case RIGHT_RIGHT:
             baseNote = 47;
+#if DEBUG
+        default:
+            Serial.println("Problème de côté dans le mouvement traité");
+#endif
             break;
-        //default:
-            //Serial.println("Problème de côté dans le mouvement traité");
     }
 
     usbMIDI.sendNoteOn(baseNote+actionPair.second,64,0);
