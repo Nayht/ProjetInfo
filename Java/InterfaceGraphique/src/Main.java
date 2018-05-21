@@ -25,7 +25,7 @@ import java.util.List;
 
 public class Main extends Application {
 
-    final private boolean usingSerie = true;
+    final private boolean usingSerie = false;
 
     /**Sert juste à lancer JavaFX
      */
@@ -96,11 +96,11 @@ public class Main extends Application {
                 switch (code) {
                     //Flèche droite
                     case RIGHT:
-                        eventMgr.manage("LEFT");
+                        eventMgr.manage("R Left");
                         break;
                     //Flèche gauche
                     case LEFT:
-                        eventMgr.manage("RIGHT");
+                        eventMgr.manage("R Right");
                         break;
                     //Flèche haut
                     case UP:
@@ -109,16 +109,16 @@ public class Main extends Application {
                     case DOWN:
                         break;
                     case Z:
-                        eventMgr.manage("UP-SNAKE");
+                        eventMgr.manage("L Up");
                         break;
                     case Q:
-                        eventMgr.manage("LEFT-SNAKE");
+                        eventMgr.manage("L Left");
                         break;
                     case S:
-                        eventMgr.manage("DOWN-SNAKE");
+                        eventMgr.manage("L Down");
                         break;
                     case D:
-                        eventMgr.manage("RIGHT-SNAKE");
+                        eventMgr.manage("L Right");
                         break;
                     //Echap
                     case ESCAPE:
