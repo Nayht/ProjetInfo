@@ -36,10 +36,10 @@ public class EventMgr {
     public void manage(String event) {
         if (!this.interfaceLocked) {
             String[] eventSplitted = event.split(" ");
-            for (String str :eventSplitted) {
+            /*for (String str :eventSplitted) {
                 System.out.println(str);
             }
-            System.out.println();
+            System.out.println();*/
             if (eventSplitted[0].equals("R")) {
                 if (eventSplitted[1].equals("Left")) {
                     this.setOfObjects.setToSlideLeft(true);
@@ -84,7 +84,8 @@ public class EventMgr {
 
         //Moniteur CPU
         CpuMonitor cpuMonitor = new CpuMonitor();
-        this.cpuLoad= new Needle(0,0,gc,0,100){
+        this.cpuLoad= new Needle(0,0,gc,0.5,0,100,100){
+
             @Override
             public void updateData(){
                 double load = cpuMonitor.getCpuLoad();
