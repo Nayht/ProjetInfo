@@ -2,6 +2,7 @@ import javafx.scene.canvas.GraphicsContext;
 import objects.abstracts.SetOfObjects;
 import objects.abstracts.TextObject;
 import objects.games.Snake;
+import objects.misc.Weather;
 import objects.time.Calendar;
 import objects.time.Clock;
 import objects.time.Date;
@@ -17,6 +18,10 @@ public class EventMgr {
     //Objets dynamiques
     private int snakePanel=1;
     private Snake snake;
+
+    private int weatherPanel=1;
+    private Weather weather;
+    
     private Needle cpuLoad;
 
     public EventMgr(GraphicsContext gc, SetOfObjects setOfObjects) {
@@ -91,6 +96,11 @@ public class EventMgr {
         };
         this.setOfObjects.appendObjectPercent(new TextObject(0,0,gc,"CPU"),0.825,0.92,0);
         this.setOfObjects.appendObjectPercent(this.cpuLoad,0.87,0.87,0);
+
+        this.weather=new Weather(0,0,gc,"Evry");
+
+        this.setOfObjects.appendObjectPercent(this.weather,0,0,0);
+
     }
 
 
