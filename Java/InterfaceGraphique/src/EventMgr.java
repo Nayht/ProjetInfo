@@ -79,7 +79,7 @@ public class EventMgr {
 
         //Moniteur CPU
         CpuMonitor cpuMonitor = new CpuMonitor();
-        this.cpuLoad= new Needle(0,0,gc,0.5,0,100,100){
+        this.cpuLoad= new Needle(0,0,gc,0,100){
             @Override
             public void updateData(){
                 double load = cpuMonitor.getCpuLoad();
