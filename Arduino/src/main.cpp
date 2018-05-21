@@ -61,28 +61,28 @@ void setup() {
 
     // Initialize APDS-9960 (configure I2C and initial values)
     if ( leftGestureSensor.init() ) {
-        Serial.println(F("Left sensor initialization complete"));
+        //Serial.println(F("Left sensor initialization complete"));
     } else {
-        Serial.println(F("Left sensor initialization failed"));
+        //Serial.println(F("Left sensor initialization failed"));
     }
 
     if ( rightGestureSensor.init(1) ) {
-        Serial.println(F("Right sensor initialization complete"));
+        //Serial.println(F("Right sensor initialization complete"));
     } else {
-        Serial.println(F("Right sensor initialization failed"));
+        //Serial.println(F("Right sensor initialization failed"));
     }
 
     // Start running the APDS-9960 gesture sensor engine
     if ( leftGestureSensor.enableGestureSensor(true) ) {
-        Serial.println(F("Left gesture sensor is now running"));
+        //Serial.println(F("Left gesture sensor is now running"));
     } else {
-        Serial.println(F("Left gesture initilization failed"));
+        //Serial.println(F("Left gesture initilization failed"));
     }
 
     if ( rightGestureSensor.enableGestureSensor(true) ) {
-        Serial.println(F("Right gesture sensor is now running"));
+        //Serial.println(F("Right gesture sensor is now running"));
     } else {
-        Serial.println(F("Right gesture initilization failed"));
+        //Serial.println(F("Right gesture initilization failed"));
     }
 
     /*// Adjust the Proximity sensor gain
@@ -309,7 +309,7 @@ void executeGestureAction(Movement& movement)
  * @param movement : Mouvement à exécuter
  */
 {
-    Serial.println(movement.getString());
+    Serial.print(movement.getString() + '\n');
     std::pair<sides,directions> actionPair = movement.getMovement();
 
     uint8_t baseNote = 0;
@@ -330,8 +330,8 @@ void executeGestureAction(Movement& movement)
         case RIGHT_RIGHT:
             baseNote = 47;
             break;
-        default:
-            Serial.println("Problème de côté dans le mouvement traité");
+        //default:
+            //Serial.println("Problème de côté dans le mouvement traité");
     }
 
     usbMIDI.sendNoteOn(baseNote+actionPair.second,64,0);

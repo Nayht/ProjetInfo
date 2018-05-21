@@ -31,10 +31,10 @@ public class EventMgr {
     public void manage(String event) {
         if (!this.interfaceLocked) {
             String[] eventSplitted = event.split(" ");
-            for (String str :eventSplitted) {
+            /*for (String str :eventSplitted) {
                 System.out.println(str);
             }
-            System.out.println();
+            System.out.println();*/
             if (eventSplitted[0].equals("R")) {
                 if (eventSplitted[1].equals("Left")) {
                     this.setOfObjects.setToSlideLeft(true);
@@ -78,7 +78,7 @@ public class EventMgr {
         this.setOfObjects.appendObjectPercent(this.snake,0.05,0.1,this.snakePanel);
 
         //Moniteur CPU
-        CpuMonitor cpuMonitor = new CpuMonitor();
+        /*CpuMonitor cpuMonitor = new CpuMonitor();
         this.cpuLoad= new Needle(0,0,gc,0.5,0,100,100){
             @Override
             public void updateData(){
@@ -90,7 +90,7 @@ public class EventMgr {
             }
         };
         this.setOfObjects.appendObjectPercent(new TextObject(0,0,gc,"CPU"),0.825,0.92,0);
-        this.setOfObjects.appendObjectPercent(this.cpuLoad,0.87,0.87,0);
+        this.setOfObjects.appendObjectPercent(this.cpuLoad,0.87,0.87,0);*/
     }
 
 
