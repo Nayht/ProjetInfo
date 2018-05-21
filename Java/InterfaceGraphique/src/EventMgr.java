@@ -19,7 +19,7 @@ public class EventMgr {
     private int snakePanel=1;
     private Snake snake;
 
-    private int weatherPanel=1;
+    private int weatherPanel=0;
     private Weather weather;
     
     private Needle cpuLoad;
@@ -58,6 +58,14 @@ public class EventMgr {
                         this.snake.changeDirection("up");
                     }
                 }
+                if (this.setOfObjects.getCurrentPanel() == this.weatherPanel){
+                    if (eventSplitted[1].equals("Right")){
+                        this.weather.changeDay(true);
+                    }
+                    else if (eventSplitted[1].equals("Left")){
+                        this.weather.changeDay(false);
+                    }
+                }
             }
         }
     }
@@ -67,7 +75,7 @@ public class EventMgr {
         this.setOfObjects.appendCadrePercent(0.025,0.03,0.95, 0.94, 0.05,0.05,0); //on ajoute un cadre à ce panel
         this.setOfObjects.appendObjectPercent(new Clock(0,0, gc), 0.05, 0.08, 0); //on ajoute une horloge au premier panel
         this.setOfObjects.appendObjectPercent(new Date(0,0, gc), 0.80, 0.08, 0); //on ajoute une horloge au premier panel
-        this.setOfObjects.appendObjectPercent(new Calendar(0,0,gc), 0.05, 0.1,0); //on ajoute une horloge au premier panel
+        this.setOfObjects.appendObjectPercent(new Calendar(0,0,gc), 0.1, 0.20,0); //on ajoute une horloge au premier panel
 
         //PAGE 2
         this.setOfObjects.addPanel(); //on ajoute un panel
@@ -84,7 +92,7 @@ public class EventMgr {
 
         //Moniteur CPU
         CpuMonitor cpuMonitor = new CpuMonitor();
-        this.cpuLoad= new Needle(0,0,gc,0.5,0,100,100){
+        this.cpuLoad= new Needle(0,0,gc,0,100){
 
             @Override
             public void updateData(){
@@ -95,13 +103,11 @@ public class EventMgr {
                 }
             }
         };
-        this.setOfObjects.appendObjectPercent(new TextObject(0,0,gc,"CPU"),0.825,0.92,0);
-        this.setOfObjects.appendObjectPercent(this.cpuLoad,0.87,0.87,0);
+        this.setOfObjects.appendObjectPercent(new TextObject(0,0, gc,this.gc.getCanvas().getWidth()*0.04,"CPU"),0.83,0.92,2);
+        this.setOfObjects.appendObjectPercent(this.cpuLoad,0.87,0.87,2);
 
         this.weather=new Weather(0,0,gc,"Evry");
-
-        this.setOfObjects.appendObjectPercent(this.weather,0,0,0);
-
+        this.setOfObjects.appendObjectPercent(this.weather,0.6,0.175,this.weatherPanel);
     }
 
 

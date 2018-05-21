@@ -25,7 +25,7 @@ import java.util.List;
 
 public class Main extends Application {
 
-    final private boolean usingSerie = true;
+    final private boolean usingSerie = false;
 
     /**Sert juste à lancer JavaFX
      */
@@ -41,6 +41,8 @@ public class Main extends Application {
         GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
         double width = gd.getDisplayMode().getWidth()/1.6;
         double height = gd.getDisplayMode().getHeight()/1.2;
+        //double width = 800;
+        //double height = 600;
 
         //On définit la taille du canvas qui va accueillir les images
         double xCanvasSize = width;

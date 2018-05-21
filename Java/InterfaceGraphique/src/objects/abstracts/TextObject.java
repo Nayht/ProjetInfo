@@ -24,6 +24,10 @@ public class TextObject extends AbstractObject {
         this(x,y,gc,"Arial",FontWeight.SEMI_BOLD,48,text);
     }
 
+    public TextObject(double x, double y, GraphicsContext gc, double size, String text){
+        this(x,y,gc,"Arial",FontWeight.SEMI_BOLD,size,text);
+    }
+
     /** Crée un objet de type TEXTE, avec une police personnalisée
      * @param x coordonnée x
      * @param y coordonnée y

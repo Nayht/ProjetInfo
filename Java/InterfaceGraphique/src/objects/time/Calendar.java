@@ -147,7 +147,7 @@ public class Calendar extends AbstractObject{
 
     @Override
     public void display() {
-        super.gc.strokeRoundRect(this.x, this.y, 210*this.size,30*(this.lineHeight+2)*this.size, 5*this.size, 5*this.size);
+        super.gc.strokeRoundRect(this.x, this.y, 215*this.size,30*(this.lineHeight+2)*this.size, this.size*30, this.size*30);
         this.monthText.display();
         for (TextObject label : labels){
             label.display();
