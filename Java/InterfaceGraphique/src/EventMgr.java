@@ -32,7 +32,6 @@ public class EventMgr {
     }
 
 
-
     public void manage(String event) {
         if (!this.interfaceLocked) {
             String[] eventSplitted = event.split(" ");
@@ -106,7 +105,7 @@ public class EventMgr {
         this.setOfObjects.appendObjectPercent(new TextObject(0,0, gc,this.gc.getCanvas().getWidth()*0.04,"CPU"),0.83,0.92,2);
         this.setOfObjects.appendObjectPercent(this.cpuLoad,0.87,0.87,2);
 
-        this.weather=new Weather(0,0,gc,"Evry");
+        this.weather=new Weather(0,0,gc,"Longyearbyen");
         this.setOfObjects.appendObjectPercent(this.weather,0.6,0.175,this.weatherPanel);
     }
 
