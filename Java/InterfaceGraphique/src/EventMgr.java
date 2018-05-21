@@ -78,8 +78,9 @@ public class EventMgr {
         this.setOfObjects.appendObjectPercent(this.snake,0.05,0.1,this.snakePanel);
 
         //Moniteur CPU
-        /*CpuMonitor cpuMonitor = new CpuMonitor();
+        CpuMonitor cpuMonitor = new CpuMonitor();
         this.cpuLoad= new Needle(0,0,gc,0.5,0,100,100){
+
             @Override
             public void updateData(){
                 double load = cpuMonitor.getCpuLoad();
@@ -90,7 +91,7 @@ public class EventMgr {
             }
         };
         this.setOfObjects.appendObjectPercent(new TextObject(0,0,gc,"CPU"),0.825,0.92,0);
-        this.setOfObjects.appendObjectPercent(this.cpuLoad,0.87,0.87,0);*/
+        this.setOfObjects.appendObjectPercent(this.cpuLoad,0.87,0.87,0);
     }
 
 

@@ -17,7 +17,7 @@ public class Needle extends AbstractObject {
     private double value; //entre 0 et 100
 
     public Needle(double x, double y, GraphicsContext gc, double minValue, double maxValue){
-        this(x,y,gc,minValue, maxValue,gc.getCanvas().getWidth()*0.025);
+        this(x,y,gc,minValue, maxValue,gc.getCanvas().getWidth()*0.08);
     }
 
     public Needle(double x, double y, GraphicsContext gc, double minValue, double maxValue, double lengthNeedle){

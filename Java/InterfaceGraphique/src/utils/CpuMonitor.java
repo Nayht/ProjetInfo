@@ -6,20 +6,19 @@ import java.io.FileReader;
 
 public class CpuMonitor {
 
-    private int nbPasses;
-    private int nbPassesBeforeUpdate;
+    private long timeLastCheck;
+    private long timeBetweenTwoCheck;
     private double[] splitValuesLastChecked;
     private File file;
 
     public CpuMonitor(){
-        this.nbPasses=0;
-        this.nbPassesBeforeUpdate=50;
+        this.timeLastCheck=System.currentTimeMillis();
+        this.timeBetweenTwoCheck=1000;
         this.splitValuesLastChecked=new double[20];
         this.file=new File("/proc/stat");
     }
 
     public double getCpuLoad(){
-        this.nbPasses+=1;
         BufferedReader reader;
         String firstLine="";
         try {
@@ -28,7 +27,8 @@ public class CpuMonitor {
         } catch (Exception e){
             e.printStackTrace();
         }
-        if (this.nbPasses>this.nbPassesBeforeUpdate) {
+        if (System.currentTimeMillis() > this.timeLastCheck + this.timeBetweenTwoCheck) {
+            this.timeLastCheck=System.currentTimeMillis();
             String[] split = firstLine.split(" ");
 
             double hundredPercent=0;
@@ -42,7 +42,6 @@ public class CpuMonitor {
             }
             double cpuLoad=1-(idle/hundredPercent);
 
-            this.nbPasses=0;
             return Math.round(cpuLoad*100);
         }
         else{
