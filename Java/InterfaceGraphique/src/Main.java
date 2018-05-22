@@ -98,17 +98,19 @@ public class Main extends Application {
                 switch (code) {
                     //Flèche droite
                     case RIGHT:
-                        eventMgr.manage("R Left");
+                        eventMgr.manage("R Right");
                         break;
                     //Flèche gauche
                     case LEFT:
-                        eventMgr.manage("R Right");
+                        eventMgr.manage("R Left");
                         break;
                     //Flèche haut
                     case UP:
+                        eventMgr.manage("R Up");
                         break;
                     //Flèche bas
                     case DOWN:
+                        eventMgr.manage("R Down");
                         break;
                     case Z:
                         eventMgr.manage("L Up");
