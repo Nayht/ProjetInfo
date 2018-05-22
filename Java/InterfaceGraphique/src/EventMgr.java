@@ -125,7 +125,7 @@ public class EventMgr {
         this.setOfObjects.appendObjectPercent(new TextObject(0,0, gc,this.gc.getCanvas().getWidth()*0.04,"CPU"),0.83,0.92,1,1);
         this.setOfObjects.appendObjectPercent(this.cpuLoad,0.87,0.87,1,1);
 
-        this.weather=new Weather(0,0,gc,"Longyearbyen");
+        this.weather=new Weather(0,0,gc,"Evry");
         this.setOfObjects.appendObjectPercent(this.weather,0.6,0.175,this.weatherPanelHorizontal,this.weatherPanelVertical);
     }
 
