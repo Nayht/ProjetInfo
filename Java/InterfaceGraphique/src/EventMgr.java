@@ -37,10 +37,10 @@ public class EventMgr {
     public void manage(String event) {
         if (!this.interfaceLocked) {
             String[] eventSplitted = event.split(" ");
-            for (String str :eventSplitted) {
+            /*for (String str :eventSplitted) {
                 System.out.println(str);
             }
-            System.out.println();
+            System.out.println();*/
             if (eventSplitted[0].equals("R")) {
                 if (eventSplitted[1].equals("Left")) {
                     this.setOfObjects.setToSlideLeft(true);

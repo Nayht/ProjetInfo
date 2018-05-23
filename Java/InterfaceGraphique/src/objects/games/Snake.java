@@ -28,8 +28,8 @@ public class Snake extends AbstractObject {
     public Snake(int x, int y, GraphicsContext gc, double size) {
         super(x,y,gc);
         this.size=size;
-        this.updateInterval=200;
-        this.nbTilePerSide=20;
+        this.updateInterval=750;
+        this.nbTilePerSide=10;
         this.squareSideLength=20*this.size;
         this.tileSize=this.squareSideLength/(this.nbTilePerSide+1);
         setUp();
@@ -42,13 +42,6 @@ public class Snake extends AbstractObject {
         this.coordsList.add(new int[]{3,5});
         this.coordsList.add(new int[]{4,5});
         this.coordsList.add(new int[]{5,5});
-        this.coordsList.add(new int[]{6,5});
-        this.coordsList.add(new int[]{7,5});
-        this.coordsList.add(new int[]{8,5});
-        this.coordsList.add(new int[]{9,5});
-        this.coordsList.add(new int[]{10,5});
-        this.coordsList.add(new int[]{11,5});
-        this.coordsList.add(new int[]{12,5});
         generateFoodPosition();
         this.direction="right";
         this.newDirection="right";
